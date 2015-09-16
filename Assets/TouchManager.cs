@@ -5,12 +5,13 @@ public class TouchManager : MonoBehaviour
 {
     //左手操作に使う変数
     public Vector2 leftDirection;
-    Vector2 basePoint;
-    bool leftAction = false;
+    public Vector2 basePoint;
+    public bool leftAction = false;
     //右手操作に使う変数
     Vector2 startPos;
     Vector2 endPos;
-    
+    public string bullet;
+
     void Update()
     {
         foreach (var touch in Input.touches)
@@ -53,16 +54,15 @@ public class TouchManager : MonoBehaviour
 
     public void rightCon(Touch touch)
     {
+        GameObject gameobject = GameObject.Find(bullet);
+
         switch (touch.phase)
         {
             case TouchPhase.Began:
                 startPos = touch.position;
-                //					prevPos = touch.position;
                 break;
 
             case TouchPhase.Moved:
-                //					gameObject.GetComponent<Rigidbody2D>().velocity = touch.position - prevPos;
-                //					prevPos = touch.position;
                 break;
 
             case TouchPhase.Ended:

@@ -8,11 +8,11 @@ public class playerCon : MonoBehaviour {
     public float speed = 3.0f;
 	
 	void Awake () {
-        touchManager = GetComponent<TouchManager>();
+        touchManager = GameObject.Find("touchManager").GetComponent<TouchManager>();
 	}
 	
 	
 	void Update () {
-	
-	}
+        GetComponent<Rigidbody2D>().position += speed * touchManager.leftDirection;
+    }
 }
