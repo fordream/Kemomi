@@ -5,6 +5,7 @@ public class PadBase : MonoBehaviour {
 
     TouchManager touchManager;
     Renderer ren;
+    public float dis;
 
     void Awake()
     {
@@ -27,6 +28,7 @@ public class PadBase : MonoBehaviour {
             ren.enabled = true;
         }
 
-        transform.position = touchManager.basePoint;
+        Vector2 touchPoint = touchManager.basePoint + touchManager.leftDirection * dis;
+        transform.position = Camera.main.ScreenToWorldPoint(touchPoint);
     }
 }
