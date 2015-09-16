@@ -40,10 +40,11 @@ public class Inventory : MonoBehaviour {
 //		}
 	}
 
+
 	void DrawInventory(){
 		for (int x = 0; x < slotsX; x++){
 			for(int y = 0; y < slotsY; y++){
-				GUI.Box (new Rect(x*20, y*20, 20, 20), y.ToString());
+				GUI.Box (new Rect(x*20, y*20, 20, 20), y.ToString(), skin.GetStyle("slot"));
 			}
 		}
 	}
