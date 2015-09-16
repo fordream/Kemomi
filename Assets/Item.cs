@@ -24,5 +24,7 @@ public class Item
 		itemIcon = Resources.Load<Texture2D>("ItemIcons/" + itemIconPath);
 		itemDesc = desc;
 	}
+	public Item(){
+	}
 
 }

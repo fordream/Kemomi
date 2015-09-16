@@ -340,6 +340,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3220bac874b3e4f2e8a7a51f646098f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotX: 5
+  slotY: 2
   inventory: []
 --- !u!1 &978625379
 GameObject:

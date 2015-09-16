@@ -3,11 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Inventory : MonoBehaviour {
+	public int slotsX, slotsY;
     public List<Item> inventory = new List<Item>();
+	public List<Item> slots = new List<Item> ();
     private ItemDB database;
 
 	// Use this for initialization
 	void Start () {
+		for (int i = 0; i < (slotsX * slotsY){
+			slots.Add(new Item());
+		}
         database = GameObject.FindGameObjectWithTag("ItemDB").GetComponent<ItemDB>();
 		inventory.Add (database.items [0]);
 		inventory.Add (database.items [1]);
