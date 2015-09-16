@@ -25,11 +25,11 @@ public class PadTop : MonoBehaviour {
         {
             ren.enabled = false;
         }
-        else
-        {
+        else{
             ren.enabled = true;
         }
 
-        transform.position = touchManager.basePoint + touchManager.leftDirection * dis;
+        Vector2 touchPoint = touchManager.basePoint + touchManager.leftDirection * dis;
+        transform.position = Camera.main.ScreenToWorldPoint(touchPoint);
     }
 }

@@ -70,7 +70,7 @@ public class TouchManager : MonoBehaviour
                 Vector2 direction = new Vector2(endPos.x - startPos.x, endPos.y - startPos.y);
                 float radian = Mathf.Atan2(direction.y, direction.x);
                 Debug.Log("magnitude : " + direction.magnitude);
-                if (direction.magnitude > 8) gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(4 * Mathf.Cos(radian), 4 * Mathf.Sin(radian));
+                if (direction.magnitude > 8) gameobject.GetComponent<Rigidbody2D>().velocity = new Vector2(4 * Mathf.Cos(radian), 4 * Mathf.Sin(radian));
                 break;
 
         }
