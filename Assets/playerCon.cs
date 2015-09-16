@@ -13,6 +13,6 @@ public class playerCon : MonoBehaviour {
 	
 	
 	void Update () {
-	
+		GetComponent<Rigidbody2D> ().position += speed * touchManager.leftDirection;
 	}
 }
