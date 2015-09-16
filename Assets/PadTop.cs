@@ -28,8 +28,9 @@ public class PadTop : MonoBehaviour {
         else{
             ren.enabled = true;
         }
-
-        Vector2 touchPoint = touchManager.basePoint + touchManager.leftDirection * dis;
-        transform.position = Camera.main.ScreenToWorldPoint(touchPoint);
+		Vector2 touchPoint = touchManager.basePoint + touchManager.leftDirection * dis;
+		transform.position = Camera.main.ScreenToWorldPoint(touchPoint);
+//		transform.position = Camera.main.ScreenToWorldPoint(touchManager.basePoint) + Camera.main.ScreenToWorldPoint(touchManager.leftDirection*dis);
+		transform.position = new Vector3 (transform.position.x, transform.position.y, -8);
     }
 }

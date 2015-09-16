@@ -30,5 +30,6 @@ public class PadBase : MonoBehaviour {
 
         Vector2 touchPoint = touchManager.basePoint + touchManager.leftDirection * dis;
         transform.position = Camera.main.ScreenToWorldPoint(touchPoint);
+		transform.position = new Vector3 (transform.position.x, transform.position.y, -8);
     }
 }
