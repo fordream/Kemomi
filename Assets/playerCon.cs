@@ -3,12 +3,15 @@ using System.Collections;
 
 public class playerCon : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    TouchManager touchManager;
+
+    public float speed = 3.0f;
 	
+	void Awake () {
+        touchManager = GetComponent<TouchManager>();
 	}
 	
-	// Update is called once per frame
+	
 	void Update () {
 	
 	}
