@@ -29,4 +29,7 @@ public class Inventory : MonoBehaviour {
 			GUI.Label (new Rect(10, i*20, 200, 50), inventory[i].itemName);
 		}
 	}
+
+	void DrawInventory(){
+	}
 }
