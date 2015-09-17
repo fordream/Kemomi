@@ -35,6 +35,17 @@ public class Layer2D
         }
     }
 
+    public int[,] ToArray() {
+        var array = new int[Width, Height];
+
+        for (int x = 0; x < Width; x++) {
+            for (int y = 0; y < Height; y++) {
+                array[x, y] = _values[ToIdx(x, y)];
+            }
+        }
+        return array;
+    }
+
     /// 作成
     public void Create(int width, int height)
     {

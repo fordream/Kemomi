@@ -16,6 +16,7 @@ public class FloorControll : MonoBehaviour {
         Debug.Log("FloorStarted. FloorLevel: " + gameStatus.FloorLevel);
 
         // TODO マップを生成する
+        generateMap();
         // TODO 敵ユニットを配置する
         // TODO アイテムを配置する
         // TODO 階段を設置する
@@ -31,6 +32,24 @@ public class FloorControll : MonoBehaviour {
 
         // TODO 部屋に入った時の判定、処理
 
+    }
+
+    private void generateMap() {
+        var mapGenerator = new DgGenerator();
+        var map = mapGenerator.Generate();
+
+        for (int x = 0; x < map.GetLength(0); x++) {
+            for (int y = 0; y < map.GetLength(1); y++) {
+                if (map[x, y] == 1) {
+                    var prefab = (GameObject)Resources.Load("Prefabs/Wall");
+                    var scriptRenderer = prefab.GetComponent<SpriteRenderer>();
+                    var wallWidth = scriptRenderer.bounds.size.x * 0.8f;
+                    var wallHeight = scriptRenderer.bounds.size.y * 0.8f;
+
+                    Instantiate(prefab, new Vector3(wallWidth * x, wallHeight * y, 0), Quaternion.identity);
+                }
+            }
+        }
     }
 
 

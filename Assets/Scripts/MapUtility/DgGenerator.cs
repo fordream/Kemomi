@@ -51,7 +51,28 @@ public class DgGenerator : MonoBehaviour
     /// </summary>
     List<DgDivision> _divList = null;
 
-    void Start()
+    void Action() {
+        var map = Generate();
+
+        for (int x = 0; x < map.GetLength(0); x++) {
+            for (int y = 0; y < map.GetLength(1); y++) {
+                if (map[x, y] == CHIP_WALL) {
+                    var prefab = (GameObject)Resources.Load("Prefabs/Wall");
+                    var scriptRenderer = prefab.GetComponent<SpriteRenderer>();
+                    var wallWidth = scriptRenderer.bounds.size.x * 0.8f;
+                    var wallHeight = scriptRenderer.bounds.size.y * 0.8f;
+
+                    Instantiate(prefab, new Vector3(wallWidth * x, wallHeight * y, 0), Quaternion.identity);
+                }
+            }
+        }
+
+    }
+    /// <summary>
+    /// マップを作成する
+    /// </summary>
+    /// <returns>タイルの二次元配列</returns>
+    public int[,] Generate()
     {
         // ■1. 初期化
         // 2次元配列初期化
@@ -78,33 +99,13 @@ public class DgGenerator : MonoBehaviour
         ConnectRooms();
 
         // デバッグ出力
-        foreach (var div in _divList)
-        {
-            div.Dump();
-        }
-        _layer.Dump();
+        // foreach (var div in _divList)
+        // {
+        //     div.Dump();
+        // }
+        // _layer.Dump();
 
-        // タイルを配置
-
-        for (int j = 0; j < _layer.Height; j++)
-        {
-            for (int i = 0; i < _layer.Width; i++)
-            {
-                if (_layer.Get(i, j) == CHIP_WALL)
-                {
-
-                    var prefab = (GameObject)Resources.Load ("Prefabs/Wall");
-                    var scriptRenderer = prefab.GetComponent<SpriteRenderer>();
-                    var wallWidth = scriptRenderer.bounds.size.x * 0.8f;
-                    var wallHeight = scriptRenderer.bounds.size.y * 0.8f;
-
-                    Instantiate(prefab, new Vector3(wallWidth * i, wallHeight * j, 0), Quaternion.identity);
-                    //Util.CreateToken(x, y, "wall1", "", "Wall");
-                }
-            }
-        }
-
-
+        return _layer.ToArray();
     }
 
     /// <summary>
