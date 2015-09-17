@@ -1,15 +1,18 @@
 using UnityEngine;
 using System.Collections;
 
+// Floorシーンを制御するクラス
 public class FloorControll : MonoBehaviour {
 
+    // ゲーム状態
     private GameStatus gameStatus;
 
-    // Use this for initialization
-    void Start () {
-
-        gameStatus = GameObject.Find("GameStatus").GetComponent<GameStatus>();
+    // ゲームオブジェクトを初期化する
+    void Start() {
         Debug.Log("FloorStarted. FloorLevel: " + gameStatus.FloorLevel);
+
+        // ゲームオブジェクトからゲーム状態クラスのインスタンス
+        gameStatus = GameObject.Find("GameStatus").GetComponent<GameStatus>();
 
         // TODO マップを生成する
         // TODO 敵ユニットを配置する
@@ -17,8 +20,8 @@ public class FloorControll : MonoBehaviour {
         // TODO 階段を設置する
     }
 
-    // Update is called once per frame
-    void Update () {
+    // フレーム毎の更新処理
+    void Update() {
 
         // ゲームオーバーになったらResultシーンへ遷移する
         if (gameStatus.GameOver) {
