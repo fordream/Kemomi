@@ -259,6 +259,15 @@ public static class MapGenerator
     /// <param name="rect">矩形情報</param>
     private static void FillDgRect(DgDivision.DgRect r)
     {
+        _layer.FillRectLTRB(r.Left, r.Top, r.Right, r.Bottom, 3);
+    }
+
+    /// <summary>
+    /// DgRectの範囲を塗りつぶす
+    /// </summary>
+    /// <param name="rect">矩形情報</param>
+    private static void FillDgRectRoad(DgDivision.DgRect r)
+    {
         _layer.FillRectLTRB(r.Left, r.Top, r.Right, r.Bottom, CHIP_NONE);
     }
 
@@ -329,8 +338,8 @@ public static class MapGenerator
                 divA.CreateRoad(x1, divA.Room.Bottom, x1 + 1, y);
                 divB.CreateRoad(x2, y, x2 + 1, divB.Room.Top);
             }
-            FillDgRect(divA.Road);
-            FillDgRect(divB.Road);
+            FillDgRectRoad(divA.Road);
+            FillDgRectRoad(divB.Road);
 
             // 通路同士を接続する
             FillHLine(x1, x2, y);
@@ -369,8 +378,8 @@ public static class MapGenerator
                 divA.CreateRoad(divA.Room.Right, y1, x, y1 + 1);
                 divB.CreateRoad(x, y2, divB.Room.Left, y2 + 1);
             }
-            FillDgRect(divA.Road);
-            FillDgRect(divB.Road);
+            FillDgRectRoad(divA.Road);
+            FillDgRectRoad(divB.Road);
 
             // 通路同士を接続する
             FillVLine(y1, y2, x);

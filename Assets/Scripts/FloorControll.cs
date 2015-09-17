@@ -48,6 +48,15 @@ public class FloorControll : MonoBehaviour {
 
                     Instantiate(prefab, new Vector3(wallWidth * x, wallHeight * y, 0), Quaternion.identity);
                 }
+
+                if (map[x, y] == 3) {
+                    var prefab = (GameObject)Resources.Load("Prefabs/Room");
+                    var scriptRenderer = prefab.GetComponent<SpriteRenderer>();
+                    var wallWidth = scriptRenderer.bounds.size.x * 0.8f;
+                    var wallHeight = scriptRenderer.bounds.size.y * 0.8f;
+
+                    Instantiate(prefab, new Vector3(wallWidth * x, wallHeight * y, 0), Quaternion.identity);
+                }
             }
         }
     }
