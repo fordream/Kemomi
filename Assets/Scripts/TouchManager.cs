@@ -50,7 +50,7 @@ public class TouchManager : MonoBehaviour
                 Debug.Log("TouchPhase.Ended");
             }
 
-            leftAngle = Vector2.Angle(basePoint, touch.position);
+           //leftAngle = Vector2.Angle(basePoint, touch.position);
 
         }
 

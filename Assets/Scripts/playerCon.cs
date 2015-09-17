@@ -18,13 +18,18 @@ public class playerCon : MonoBehaviour {
 	void Update () {
         GetComponent<Rigidbody2D>().position += speed * touchManager.leftDirection;
 
+        animator.SetBool("UP", false);
+        animator.SetBool("DOWN", false);
+        animator.SetBool("RIGHT", false);
+        animator.SetBool("LEFT", false);
+
         if (touchManager.leftAngle < 45.0f || touchManager.leftAngle > 315.0f)
-            animator.SetTrigger("UP");
+            animator.SetBool("UP", true);
         else if (touchManager.leftAngle >= 45.0f && touchManager.leftAngle < 135.0f)
-            animator.SetTrigger("RIGHT");
-        else if (touchManager.leftAngle >= 135.0f && touchManager.leftAngle > 225.0f)
-            animator.SetTrigger("DOWN");
+            animator.SetBool("RIGHT", true);
+        else if (touchManager.leftAngle >= 135.0f && touchManager.leftAngle < 225.0f)
+            animator.SetBool("DOWN", true);
         else
-            animator.SetTrigger("LEFT");
+            animator.SetBool("LEFT", true);
     }       
 }
