@@ -246,6 +246,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 689669167}
+  - {fileID: 2015547773}
   m_Father: {fileID: 0}
   m_RootOrder: 6
 --- !u!61 &508775681
@@ -256,11 +257,11 @@ BoxCollider2D:
   m_GameObject: {fileID: 508775677}
   m_Enabled: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -.00226402283, y: -.0717898607}
   serializedVersion: 2
-  m_Size: {x: 1.03999996, y: 1.27999997}
+  m_Size: {x: .503833771, y: .92557478}
 --- !u!50 &508775682
 Rigidbody2D:
   serializedVersion: 2
@@ -288,7 +289,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0ee4bb86cf219a489c47eadf2688cba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hpMax: 15
+  spMax: 100
   speed: 3
+  slowRate: .5
+  searchRangeRad: .5
+  lv: 1
+  closeToEnemy: 0
+--- !u!1001 &571211595
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 456272, guid: ad9a0b868dfa5944abf5b0deaf58622e, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 4.07405376
+      objectReference: {fileID: 0}
+    - target: {fileID: 456272, guid: ad9a0b868dfa5944abf5b0deaf58622e, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -1.86000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 456272, guid: ad9a0b868dfa5944abf5b0deaf58622e, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 456272, guid: ad9a0b868dfa5944abf5b0deaf58622e, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 456272, guid: ad9a0b868dfa5944abf5b0deaf58622e, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 456272, guid: ad9a0b868dfa5944abf5b0deaf58622e, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 456272, guid: ad9a0b868dfa5944abf5b0deaf58622e, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 456272, guid: ad9a0b868dfa5944abf5b0deaf58622e, type: 2}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: ad9a0b868dfa5944abf5b0deaf58622e, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &611314054
 GameObject:
   m_ObjectHideFlags: 0
@@ -663,6 +712,60 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dis: 25
+--- !u!1 &2015547772
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2015547773}
+  - 114: {fileID: 2015547774}
+  - 58: {fileID: 2015547775}
+  m_Layer: 0
+  m_Name: attackColl
+  m_TagString: PlayerAttack
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2015547773
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2015547772}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -.75999999, y: -.100000001, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 508775680}
+  m_RootOrder: 1
+--- !u!114 &2015547774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2015547772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4aef8c8e9c26074db3e90c5c7846f5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  power: 1
+--- !u!58 &2015547775
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2015547772}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: .5
 --- !u!1 &2040112554
 GameObject:
   m_ObjectHideFlags: 0

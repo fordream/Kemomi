@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - ItemDB
+  - PlayerAttack
+  - Enemy
   layers:
   - Default
   - TransparentFX
