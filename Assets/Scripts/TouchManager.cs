@@ -5,6 +5,7 @@ public class TouchManager : MonoBehaviour
 {
     //左手操作に使う変数
     public Vector2 leftDirection;
+    public float leftAngle;
     public Vector2 basePoint;
     public bool leftAction = false;
     //右手操作に使う変数
@@ -49,7 +50,10 @@ public class TouchManager : MonoBehaviour
                 Debug.Log("TouchPhase.Ended");
             }
 
+            leftAngle = Vector2.Angle(basePoint, touch.position);
+
         }
+
     }
 
     public void rightCon(Touch touch)
