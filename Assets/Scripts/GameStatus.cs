@@ -10,12 +10,12 @@ public class GameStatus : MonoBehaviour {
     public bool GameOver { get; set; }
 
     void Awake() {
+        DontDestroyOnLoad(this);
         Initialize();
     }
 
     public void Initialize() {
         FloorLevel = 1;
         PlayTime = 0;
-        DontDestroyOnLoad(this);
     }
 }

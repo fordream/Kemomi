@@ -20,9 +20,12 @@ public class FloorControll : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
+        // ゲームオーバーになったらResultシーンへ遷移する
         if (gameStatus.GameOver) {
-            Application.LoadLevel("Floor");
+            Application.LoadLevel("Result");
         }
+
+        // TODO 部屋に入った時の判定、処理
 
     }
 
@@ -34,8 +37,6 @@ public class FloorControll : MonoBehaviour {
     }
 
     public void NextFloorButton() {
-        Debug.Log("pressed");
-
         gameStatus.FloorLevel++;
 
         Application.LoadLevel("Floor");
