@@ -1,5 +1,7 @@
-﻿using UnityEngine;
 using System.Collections;
+
+namespace MapUtility
+{
 
 /// <summary>
 /// ダンジョン区画情報
@@ -75,14 +77,6 @@ public class DgDivision
             Bottom = rect.Bottom;
         }
 
-        /// <summary>
-        /// デバッグ出力
-        /// </summary>
-        public void Dump()
-        {
-            Debug.Log(string.Format("<Rect l,t,r,b = {0},{1},{2},{3}> w,h = {4},{5}",
-                Left, Top, Right, Bottom, Width, Height));
-        }
     }
 
     /// <summary>
@@ -131,16 +125,6 @@ public class DgDivision
         Road = new DgRect(left, top, right, bottom);
     }
 
-    /// <summary>
-    /// デバッグ出力
-    /// </summary>
-    public void Dump()
-    {
-        Outer.Dump();
-        Room.Dump();
-        if(Road != null)
-        {
-            Road.Dump();
-        }
-    }
+}
+
 }

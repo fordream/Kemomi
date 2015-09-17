@@ -1,5 +1,7 @@
-﻿using UnityEngine;
 using System.Collections;
+
+namespace MapUtility
+{
 
 /// 2次元レイヤー
 public class Layer2D
@@ -150,18 +152,6 @@ public class Layer2D
         FillRect(left, top, right - left, bottom - top, val);
     }
 
-    /// デバッグ出力
-    public void Dump()
-    {
-        Debug.Log("[Layer2D] (w,h)=(" + Width + "," + Height + ")");
-        for (int y = 0; y < Height; y++)
-        {
-            string s = "";
-            for (int x = 0; x < Width; x++)
-            {
-                s += Get(x, y) + ",";
-            }
-            Debug.Log(s);
-        }
-    }
+}
+
 }

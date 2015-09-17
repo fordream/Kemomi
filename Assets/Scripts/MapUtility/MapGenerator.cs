@@ -1,78 +1,64 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
+namespace MapUtility
+{
 
 /// <summary>
 /// ダンジョンの自動生成モジュール
 /// </summary>
-public class DgGenerator : MonoBehaviour
+public static class MapGenerator
 {
+    /// <summary>
+    /// 通路
+    /// </summary>
+    public const int CHIP_NONE = 0;
+    /// <summary>
+    /// 壁
+    /// </summary>
+    public const int CHIP_WALL = 1;
+
     /// <summary>
     /// マップ全体の幅
     /// </summary>
-    const int WIDTH = 30;
+    private const int WIDTH = 30;
     /// <summary>
     /// マップ全体の高さ
     /// </summary>
-    const int HEIGHT = 30;
+    private const int HEIGHT = 30;
 
     /// <summary>
     /// 区画と部屋の余白サイズ
     /// </summary>
-    const int OUTER_MERGIN = 3;
+    private const int OUTER_MERGIN = 3;
     /// <summary>
     /// 部屋配置の余白サイズ
     /// </summary>
-    const int POS_MERGIN = 2;
+    private const int POS_MERGIN = 2;
     /// <summary>
     /// 最小の部屋サイズ
     /// </summary>
-    const int MIN_ROOM = 5;
+    private const int MIN_ROOM = 5;
     /// <summary>
     /// 最大の部屋サイズ
     /// </summary>
-    const int MAX_ROOM = 6;
-
-    /// <summary>
-    /// 通路
-    /// </summary>
-    const int CHIP_NONE = 0;
-    /// <summary>
-    /// 壁
-    /// </summary>
-    const int CHIP_WALL = 1;
+    private const int MAX_ROOM = 6;
 
     /// <summary>
     /// 2次元配列情報
     /// </summary>
-    Layer2D _layer = null;
+    private static Layer2D _layer = null;
     /// <summary>
     /// 区画リスト
     /// </summary>
-    List<DgDivision> _divList = null;
+    private static List<DgDivision> _divList = null;
 
-    void Action() {
-        var map = Generate();
-
-        for (int x = 0; x < map.GetLength(0); x++) {
-            for (int y = 0; y < map.GetLength(1); y++) {
-                if (map[x, y] == CHIP_WALL) {
-                    var prefab = (GameObject)Resources.Load("Prefabs/Wall");
-                    var scriptRenderer = prefab.GetComponent<SpriteRenderer>();
-                    var wallWidth = scriptRenderer.bounds.size.x * 0.8f;
-                    var wallHeight = scriptRenderer.bounds.size.y * 0.8f;
-
-                    Instantiate(prefab, new Vector3(wallWidth * x, wallHeight * y, 0), Quaternion.identity);
-                }
-            }
-        }
-
-    }
     /// <summary>
     /// マップを作成する
     /// </summary>
     /// <returns>タイルの二次元配列</returns>
-    public int[,] Generate()
+    public static int[,] Generate()
     {
         // ■1. 初期化
         // 2次元配列初期化
@@ -115,7 +101,7 @@ public class DgGenerator : MonoBehaviour
     /// <param name="top">上</param>
     /// <param name="right">右</param>
     /// <param name="bottom">下</param>
-    void CreateDivision(int left, int top, int right, int bottom)
+    private static void CreateDivision(int left, int top, int right, int bottom)
     {
         DgDivision div = new DgDivision();
         div.Outer.Set(left, top, right, bottom);
@@ -126,7 +112,7 @@ public class DgGenerator : MonoBehaviour
     /// 区画を分割する
     /// </summary>
     /// <param name="bVertical">垂直分割するかどうか</param>
-    void SplitDivison(bool bVertical)
+    private static void SplitDivison(bool bVertical)
     {
         // 末尾の要素を取り出し
         DgDivision parent = _divList[_divList.Count - 1];
@@ -217,7 +203,7 @@ public class DgGenerator : MonoBehaviour
     /// </summary>
     /// <param name="size">チェックする区画のサイズ</param>
     /// <returns>分割できればtrue</returns>
-    bool CheckDivisionSize(int size)
+    private static bool CheckDivisionSize(int size)
     {
         // (最小の部屋サイズ + 余白)
         // 2分割なので x2 する
@@ -230,7 +216,7 @@ public class DgGenerator : MonoBehaviour
     /// <summary>
     /// 区画に部屋を作る
     /// </summary>
-    void CreateRoom()
+    private static void CreateRoom()
     {
         foreach (DgDivision div in _divList)
         {
@@ -271,7 +257,7 @@ public class DgGenerator : MonoBehaviour
     /// DgRectの範囲を塗りつぶす
     /// </summary>
     /// <param name="rect">矩形情報</param>
-    void FillDgRect(DgDivision.DgRect r)
+    private static void FillDgRect(DgDivision.DgRect r)
     {
         _layer.FillRectLTRB(r.Left, r.Top, r.Right, r.Bottom, CHIP_NONE);
     }
@@ -279,7 +265,7 @@ public class DgGenerator : MonoBehaviour
     /// <summary>
     /// 部屋同士を通路でつなぐ
     /// </summary>
-    void ConnectRooms()
+    private static void ConnectRooms()
     {
         for (int i = 0; i < _divList.Count - 1; i++)
         {
@@ -310,7 +296,7 @@ public class DgGenerator : MonoBehaviour
     /// <param name="divB">部屋2</param>
     /// <param name="bGrandChild">孫チェックするかどうか</param>
     /// <returns>つなぐことができたらtrue</returns>
-    bool CreateRoad(DgDivision divA, DgDivision divB, bool bGrandChild=false)
+    private static bool CreateRoad(DgDivision divA, DgDivision divB, bool bGrandChild=false)
     {
         if (divA.Outer.Bottom == divB.Outer.Top || divA.Outer.Top == divB.Outer.Bottom)
         {
@@ -403,7 +389,7 @@ public class DgGenerator : MonoBehaviour
     /// <param name="left">左</param>
     /// <param name="right">右</param>
     /// <param name="y">Y座標</param>
-    void FillHLine(int left, int right, int y)
+    private static void FillHLine(int left, int right, int y)
     {
         if (left > right)
         {
@@ -421,7 +407,7 @@ public class DgGenerator : MonoBehaviour
     /// <param name="top">上</param>
     /// <param name="bottom">下</param>
     /// <param name="x">X座標</param>
-    void FillVLine(int top, int bottom, int x)
+    private static void FillVLine(int top, int bottom, int x)
     {
         if (top > bottom)
         {
@@ -432,5 +418,7 @@ public class DgGenerator : MonoBehaviour
         }
         _layer.FillRectLTRB(x, top, x + 1, bottom + 1, CHIP_NONE);
     }
+
+}
 
 }

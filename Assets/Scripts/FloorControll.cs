@@ -15,7 +15,6 @@ public class FloorControll : MonoBehaviour {
 
         Debug.Log("FloorStarted. FloorLevel: " + gameStatus.FloorLevel);
 
-        // TODO マップを生成する
         generateMap();
         // TODO 敵ユニットを配置する
         // TODO アイテムを配置する
@@ -34,13 +33,14 @@ public class FloorControll : MonoBehaviour {
 
     }
 
+    // マップ生成
     private void generateMap() {
-        var mapGenerator = new DgGenerator();
-        var map = mapGenerator.Generate();
+        //var mapGenerator = new MapGenerator();
+        var map = MapUtility.MapGenerator.Generate();
 
         for (int x = 0; x < map.GetLength(0); x++) {
             for (int y = 0; y < map.GetLength(1); y++) {
-                if (map[x, y] == 1) {
+                if (map[x, y] == MapUtility.MapGenerator.CHIP_WALL) {
                     var prefab = (GameObject)Resources.Load("Prefabs/Wall");
                     var scriptRenderer = prefab.GetComponent<SpriteRenderer>();
                     var wallWidth = scriptRenderer.bounds.size.x * 0.8f;
