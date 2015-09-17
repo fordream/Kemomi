@@ -6,13 +6,13 @@ using System.Collections;
 public class GameStatus : MonoBehaviour {
 
     // 現在の階数
-    public int FloorLevel { get; set; };
+    public int FloorLevel { get; set; }
 
     // プレイ時間
-    public int PlayTime { get; set; };
+    public int PlayTime { get; set; }
 
     // ゲームオーバーフラグ
-    public bool GameOver { get; set; };
+    public bool GameOver { get; set; }
 
     // ゲームオブジェクトを初期化する
     void Start() {
