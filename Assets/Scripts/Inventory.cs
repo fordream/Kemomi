@@ -22,22 +22,16 @@ public class Inventory : MonoBehaviour {
 	void Start () {
 		showInventory = true;
 		for (int i=0; i<inventorySize; i++){
-			inventory.Add (new Item());
+			inventory.Add (new EmptyItem());
 		}
         itemDB = GameObject.FindGameObjectWithTag("ItemDB").GetComponent<ItemDB>();
 		AddItem (0);
 		AddItem (1);
 		AddItem (1);
 		AddItem (2);
-		AddItem (3);
-		AddItem (4);
-		AddItem (5);
-		AddItem (6);
-		AddItem (7);
-		AddItem (8);
-		AddItem (8);
-		AddItem (9);
-		RemoveItem (0);
+		AddItem (2);
+		AddItem (2);
+
 	}
 
 	void Update () {
@@ -65,7 +59,7 @@ public class Inventory : MonoBehaviour {
 
 			if (inventory [i].itemName != null) {
 				GUI.DrawTexture (inventoryRect, inventory [i].itemIcon);
-				GUI.DrawTexture (selectedInventoryRect, Resources.Load<Texture2D> ("ItemIcons/selected"));
+				if (selectedInventoryIndex != -1) GUI.DrawTexture (selectedInventoryRect, Resources.Load<Texture2D> ("ItemIcons/selected"));
 
 				foreach (var touch in Input.touches) { // input
 
@@ -85,7 +79,7 @@ public class Inventory : MonoBehaviour {
 					case TouchPhase.Ended:
 						inputEndPos = touchPos;
 						if (inventoryRect.Contains (inputEndPos)) {
-							selectedInventoryIndex = i;
+							tapItem(i);
 						}
 						break;
 					}
@@ -94,13 +88,29 @@ public class Inventory : MonoBehaviour {
 		}
 	}
 
-	void RemoveItem(int id){
-		for (int i=0; i<inventory.Count; i++) {
-			if (inventory[i].itemID == id){
-				inventory[i] = new Item();
-				break;
+	void tapItem(int tappedInventoryIndex){
+		if (inventory[tappedInventoryIndex] is ItemWithDirection) {
+			
+			// 既に同じアイテムが使用可能になっていたら・・・
+			if (tappedInventoryIndex == selectedInventoryIndex) {
+				selectedInventoryIndex = -1; // 使用可能アイテムを解除する。
+				// ここに光らせたアイコンを戻す処理を入れてください
+			} else {
+				selectedInventoryIndex = tappedInventoryIndex;
+				// ここに選択したアイテムのアイコンを光らせる処理を入れてください
+			}
+			
+		} else if (inventory[tappedInventoryIndex] is OneTouchItem) {
+			// ワンタッチアイテムを使用し、正常に消費されたら、インベントリから除去する
+			if (((OneTouchItem)inventory[tappedInventoryIndex]).Effect()) {
+				RemoveItem(tappedInventoryIndex);
+				selectedInventoryIndex = -1; // 使用可能アイテムを解除する。
 			}
 		}
+	}
+
+	void RemoveItem(int inventoryIndex){
+		inventory[inventoryIndex] = new EmptyItem();
 	}
 
 	void AddItem(int id){
