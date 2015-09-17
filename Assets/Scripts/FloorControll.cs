@@ -9,10 +9,11 @@ public class FloorControll : MonoBehaviour {
 
     // ゲームオブジェクトを初期化する
     void Start() {
-        Debug.Log("FloorStarted. FloorLevel: " + gameStatus.FloorLevel);
 
-        // ゲームオブジェクトからゲーム状態クラスのインスタンス
+        // ゲームオブジェクトからゲーム状態クラスのインスタンスを取得する
         gameStatus = GameObject.Find("GameStatus").GetComponent<GameStatus>();
+
+        Debug.Log("FloorStarted. FloorLevel: " + gameStatus.FloorLevel);
 
         // TODO マップを生成する
         // TODO 敵ユニットを配置する
