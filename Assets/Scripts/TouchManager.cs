@@ -51,8 +51,8 @@ public class TouchManager : MonoBehaviour
                 leftDirection = Vector2.zero;
                 Debug.Log("TouchPhase.Ended");
             }
-
-           //leftAngle = Vector2.Angle(basePoint, touch.position);
+		
+			leftAngle = 360 / (Mathf.PI * 2) * Mathf.Atan2(leftDirection.y, leftDirection.x);
 
         }
 

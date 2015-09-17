@@ -95,7 +95,6 @@ GameObject:
   - 4: {fileID: 592351985}
   - 212: {fileID: 592351984}
   - 95: {fileID: 592351983}
-  - 114: {fileID: 592351986}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -158,17 +157,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
---- !u!114 &592351986
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 592351982}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 918e02c383e324c7f839a30139225d17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &683672153
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,7 +201,7 @@ Camera:
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: .0196078438}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: .5
+    x: 1
     y: 0
     width: 1
     height: .100000001
@@ -286,10 +274,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3220bac874b3e4f2e8a7a51f646098f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotsX: 5
-  slotsY: 2
+  inventorySize: 6
+  skin: {fileID: 11400000, guid: c6650b48cde84496b8b0d6d3f9f36c72, type: 2}
   inventory: []
-  slots: []
+  selectedInventoryIndex: 0
 --- !u!1 &978625379
 GameObject:
   m_ObjectHideFlags: 0

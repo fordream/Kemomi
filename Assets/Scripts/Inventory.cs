@@ -3,48 +3,136 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Inventory : MonoBehaviour {
-	public int slotsX, slotsY;
+	public int inventorySize;
 	public GUISkin skin;
     public List<Item> inventory = new List<Item>();
-	public List<Item> slots = new List<Item> ();
-    private ItemDB database;
+	public int selectedInventoryIndex;
+
+    private ItemDB itemDB;
 	private bool showInventory;
 
-	// Use this for initialization
-	void Start () {
-		for (int i = 0; i < (slotsX * slotsY); i++){
-			slots.Add(new Item());
-		}
-        database = GameObject.FindGameObjectWithTag("ItemDB").GetComponent<ItemDB>();
-		inventory.Add (database.items [0]);
-		inventory.Add (database.items [1]);
-		inventory.Add (database.items [2]);
-	}
+	private Vector2 inputBeganPos;
+	private int inputBeganInventoryIndex;
+	private Vector2 inputPrevPos;
+	private int inputPrevInventoryIndex;
+	private Vector2 inputEndPos;
+	private int inputEndInventoryIndex;
+
 	
-	// Update is called once per frame
-	void Update () {
-		if (Input.GetButtonDown ("Inventory")) {
-			showInventory = !showInventory;
-		}
+	void Start () {
 		showInventory = true;
+		for (int i=0; i<inventorySize; i++){
+			inventory.Add (new Item());
+		}
+        itemDB = GameObject.FindGameObjectWithTag("ItemDB").GetComponent<ItemDB>();
+		AddItem (0);
+		AddItem (1);
+		AddItem (1);
+		AddItem (2);
+		AddItem (3);
+		AddItem (4);
+		AddItem (5);
+		AddItem (6);
+		AddItem (7);
+		AddItem (8);
+		AddItem (8);
+		AddItem (9);
+		RemoveItem (0);
+	}
+
+	void Update () {
 	}
 
 	void OnGUI(){
 		GUI.skin = skin;
 
+		Touch[] touches = Input.touches;
 		if (showInventory){
-			DrawInventory ();
+			DrawInventory (touches);
 		}
-//		for (int i = 0; i < inventory.Count; i++){
-//			GUI.Label (new Rect(10, i*20, 200, 50), inventory[i].itemName);
-//		}
 	}
 
-	void DrawInventory(){
-		for (int x = 0; x < slotsX; x++){
-			for(int y = 0; y < slotsY; y++){
-				GUI.Box (new Rect(x*20, y*20, 20, 20), y.ToString());
+	void DrawInventory(Touch[] touches){
+		for (int i=0; i<inventorySize; i++) {
+			
+			Rect inventoryRect = new Rect (Screen.width - 32 - 42 * i, Screen.height - 32, 32, 32);
+			Rect selectedInventoryRect = new Rect (Screen.width - 32 - 42 * selectedInventoryIndex, Screen.height - 32, 32, 32);
+
+			string inventoryCount = "";
+			if (inventory [i].itemCount > 0)
+				inventoryCount = inventory [i].itemCount.ToString ();
+			GUI.Box (inventoryRect, inventoryCount, skin.GetStyle ("slot"));
+
+			if (inventory [i].itemName != null) {
+				GUI.DrawTexture (inventoryRect, inventory [i].itemIcon);
+				GUI.DrawTexture (selectedInventoryRect, Resources.Load<Texture2D> ("ItemIcons/selected"));
+
+				foreach (var touch in Input.touches) { // input
+
+					Vector2 touchPos = new Vector2 (touch.position.x, Screen.height - touch.position.y);
+
+					switch (touch.phase) {
+					case TouchPhase.Began:
+						inputBeganPos = touchPos;
+
+						inputPrevPos = touchPos;
+						break;
+						
+					case TouchPhase.Moved:
+						inputPrevPos = touchPos;
+						break;
+						
+					case TouchPhase.Ended:
+						inputEndPos = touchPos;
+						if (inventoryRect.Contains (inputEndPos)) {
+							selectedInventoryIndex = i;
+						}
+						break;
+					}
+				}
 			}
 		}
+	}
+
+	void RemoveItem(int id){
+		for (int i=0; i<inventory.Count; i++) {
+			if (inventory[i].itemID == id){
+				inventory[i] = new Item();
+				break;
+			}
+		}
+	}
+
+	void AddItem(int id){
+		for (int i=0; i<inventory.Count; i++) {
+			if (inventory[i].itemID == id) {
+				inventory[i].itemCount++;
+				return;
+			}
+		}
+		for (int i=0; i<inventory.Count; i++) {
+			if (inventory[i].itemName == null){
+				for (int j=0; j<itemDB.items.Count; j++) {
+					if (itemDB.items[j].itemID == id) {
+						inventory[i] = itemDB.items[j];
+						inventory[i].itemCount++;
+						break;
+					}
+				}
+				break;
+			}
+		}
+	}
+
+	bool InventoryContains(int id)
+	{
+		bool result = false;
+		for (int i=0; i<inventory.Count; i++){
+			result = inventory[i].itemID == id;
+			if(result){
+				break;
+			}
+		}
+		return result;
 	}
 }

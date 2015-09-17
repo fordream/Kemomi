@@ -23,13 +23,15 @@ public class playerCon : MonoBehaviour {
         animator.SetBool("RIGHT", false);
         animator.SetBool("LEFT", false);
 
-        if (touchManager.leftAngle < 45.0f || touchManager.leftAngle > 315.0f)
-            animator.SetBool("UP", true);
-        else if (touchManager.leftAngle >= 45.0f && touchManager.leftAngle < 135.0f)
-            animator.SetBool("RIGHT", true);
-        else if (touchManager.leftAngle >= 135.0f && touchManager.leftAngle < 225.0f)
-            animator.SetBool("DOWN", true);
-        else
-            animator.SetBool("LEFT", true);
+		if(touchManager.leftAction){
+        	if (touchManager.leftAngle > 45.0f && touchManager.leftAngle < 135.0f)
+        	    animator.SetBool("UP", true);
+        	else if (touchManager.leftAngle >= -45.0f && touchManager.leftAngle < 45.0f)
+        	    animator.SetBool("RIGHT", true);
+        	else if (touchManager.leftAngle >= -135.0f && touchManager.leftAngle < -45.0f)
+        	    animator.SetBool("DOWN", true);
+        	else
+        	    animator.SetBool("LEFT", true);
+		}
     }       
 }
