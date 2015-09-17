@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using System.Collections;
+using MapUtility;
 
 // Floorシーンを制御するクラス
 public class FloorControll : MonoBehaviour {
@@ -35,32 +37,40 @@ public class FloorControll : MonoBehaviour {
 
     // マップ生成
     private void generateMap() {
-        //var mapGenerator = new MapGenerator();
+
+        // 全マップチップのプレハブを読み込む
+        var wallPrefab = (GameObject)Resources.Load("Prefabs/Wall");
+        var roadPrefab = (GameObject)Resources.Load("Prefabs/Road");
+        var roomPrefab = (GameObject)Resources.Load("Prefabs/Room");
+        var gatePrefab = (GameObject)Resources.Load("Prefabs/Gate");
+
+        // マップチップの幅を取得
+        var chipSize = wallPrefab.GetComponent<SpriteRenderer>().bounds.size.x * 0.8f;
+
+        // ランダムマップパターンを生成
         var map = MapUtility.MapGenerator.Generate();
 
+        // 対応するプレハブからマップチップのゲームオブジェクトを生成
         for (int x = 0; x < map.GetLength(0); x++) {
             for (int y = 0; y < map.GetLength(1); y++) {
-                string prefabId = "";
-                if (map[x, y] == MapUtility.MapGenerator.CHIP_WALL) {
-                    prefabId = "Prefabs/Wall";
+                GameObject prefab = null;
+                switch (map[x, y]) {
+                    case MapChip.Wall:
+                        prefab = wallPrefab;
+                        break;
+                    case MapChip.Road:
+                        prefab = roadPrefab;
+                        break;
+                    case MapChip.Room:
+                        prefab = roomPrefab;
+                        break;
+                    case MapChip.Gate:
+                        prefab = gatePrefab;
+                        break;
                 }
-                if (map[x, y] == MapUtility.MapGenerator.CHIP_NONE) {
-                    prefabId = "Prefabs/Road";
+                if (prefab != null) {
+                    Instantiate(prefab, new Vector3(chipSize * x, chipSize * y, 0), Quaternion.identity);
                 }
-                if (map[x, y] == 3) {
-                    prefabId = "Prefabs/Room";
-                }
-                if (map[x, y] == 4) {
-                    prefabId = "Prefabs/Gate";
-                }
-
-
-                var prefab = (GameObject)Resources.Load(prefabId);
-                var scriptRenderer = prefab.GetComponent<SpriteRenderer>();
-                var wallWidth = scriptRenderer.bounds.size.x * 0.8f;
-                var wallHeight = scriptRenderer.bounds.size.y * 0.8f;
-
-                Instantiate(prefab, new Vector3(wallWidth * x, wallHeight * y, 0), Quaternion.identity);
             }
         }
     }
