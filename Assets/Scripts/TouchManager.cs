@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class TouchManager : MonoBehaviour
 {
+
     //左手操作に使う変数
     public Vector2 leftDirection;
     public float leftAngle;
