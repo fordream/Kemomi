@@ -91,7 +91,21 @@ public static class MapGenerator
         // }
         // _layer.Dump();
 
-        return _layer.ToArray();
+        return findGate(_layer.ToArray());
+    }
+
+    private static int[,] findGate(int[,] array) {
+        for (int x = 0; x < array.GetLength(0); x++) {
+            for (int y = 0; y < array.GetLength(1); y++) {
+                if (array[x, y] == CHIP_NONE) {
+                    if (array[x - 1, y] == 3 || array[x + 1, y] == 3 ||
+                            array[x, y - 1] == 3 || array[x, y + 1] == 3) {
+                        array[x, y] = 4;
+                    }
+                }
+            }
+        }
+        return array;
     }
 
     /// <summary>
@@ -269,6 +283,15 @@ public static class MapGenerator
     private static void FillDgRectRoad(DgDivision.DgRect r)
     {
         _layer.FillRectLTRB(r.Left, r.Top, r.Right, r.Bottom, CHIP_NONE);
+    }
+
+    /// <summary>
+    /// DgRectの範囲を塗りつぶす
+    /// </summary>
+    /// <param name="rect">矩形情報</param>
+    private static void FillDgRectGate(DgDivision.DgRect r)
+    {
+        _layer.FillRectLTRB(r.Left, r.Top, r.Right, r.Bottom, 4);
     }
 
     /// <summary>

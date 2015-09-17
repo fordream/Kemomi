@@ -40,23 +40,27 @@ public class FloorControll : MonoBehaviour {
 
         for (int x = 0; x < map.GetLength(0); x++) {
             for (int y = 0; y < map.GetLength(1); y++) {
+                string prefabId = "";
                 if (map[x, y] == MapUtility.MapGenerator.CHIP_WALL) {
-                    var prefab = (GameObject)Resources.Load("Prefabs/Wall");
-                    var scriptRenderer = prefab.GetComponent<SpriteRenderer>();
-                    var wallWidth = scriptRenderer.bounds.size.x * 0.8f;
-                    var wallHeight = scriptRenderer.bounds.size.y * 0.8f;
-
-                    Instantiate(prefab, new Vector3(wallWidth * x, wallHeight * y, 0), Quaternion.identity);
+                    prefabId = "Prefabs/Wall";
                 }
-
+                if (map[x, y] == MapUtility.MapGenerator.CHIP_NONE) {
+                    prefabId = "Prefabs/Road";
+                }
                 if (map[x, y] == 3) {
-                    var prefab = (GameObject)Resources.Load("Prefabs/Room");
-                    var scriptRenderer = prefab.GetComponent<SpriteRenderer>();
-                    var wallWidth = scriptRenderer.bounds.size.x * 0.8f;
-                    var wallHeight = scriptRenderer.bounds.size.y * 0.8f;
-
-                    Instantiate(prefab, new Vector3(wallWidth * x, wallHeight * y, 0), Quaternion.identity);
+                    prefabId = "Prefabs/Room";
                 }
+                if (map[x, y] == 4) {
+                    prefabId = "Prefabs/Gate";
+                }
+
+
+                var prefab = (GameObject)Resources.Load(prefabId);
+                var scriptRenderer = prefab.GetComponent<SpriteRenderer>();
+                var wallWidth = scriptRenderer.bounds.size.x * 0.8f;
+                var wallHeight = scriptRenderer.bounds.size.y * 0.8f;
+
+                Instantiate(prefab, new Vector3(wallWidth * x, wallHeight * y, 0), Quaternion.identity);
             }
         }
     }
