@@ -25,12 +25,12 @@ public class Inventory : MonoBehaviour {
 			inventory.Add (new EmptyItem());
 		}
         itemDB = GameObject.FindGameObjectWithTag("ItemDB").GetComponent<ItemDB>();
-		AddItem (0);
+
 		AddItem (1);
-		AddItem (1);
 		AddItem (2);
 		AddItem (2);
 		AddItem (2);
+		AddItem (3);
 
 	}
 
@@ -125,6 +125,11 @@ public class Inventory : MonoBehaviour {
 				for (int j=0; j<itemDB.items.Count; j++) {
 					if (itemDB.items[j].itemID == id) {
 						inventory[i] = itemDB.items[j];
+						print(inventory[0].itemName);
+						print(inventory[1].itemName);
+						print(inventory[2].itemName);
+						print(inventory[3].itemName);
+						print(inventory[4].itemName);
 						inventory[i].itemCount++;
 						break;
 					}

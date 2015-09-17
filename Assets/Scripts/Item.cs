@@ -29,6 +29,8 @@ public class EmptyItem : Item {
 	public override bool IsAvailable(){
 		return false;
 	}
+	public EmptyItem(string name, int id, string desc, string itemIconPath):base(name,id,desc,itemIconPath){
+	}
 	public EmptyItem(){
 	}
 }
