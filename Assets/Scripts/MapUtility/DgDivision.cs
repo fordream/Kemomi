@@ -19,10 +19,11 @@ public class DgDivision
         /// <summary>
         /// コンストラクタ
         /// </summary>
-		public DgRect(int left=0, int top=0, int right=0, int bottom=0)
+        public DgRect(int left=0, int top=0, int right=0, int bottom=0)
         {
-			Set(left, top, right, bottom);
+            Set(left, top, right, bottom);
         }
+
         /// <summary>
         /// 値をまとめて設定する
         /// </summary>
@@ -37,6 +38,7 @@ public class DgDivision
             Right  = right;
             Bottom = bottom;
         }
+
         /// <summary>
         /// 幅
         /// </summary>
@@ -44,6 +46,7 @@ public class DgDivision
         {
             get { return Right - Left; }
         }
+
         /// <summary>
         /// 高さ
         /// </summary>
@@ -51,6 +54,7 @@ public class DgDivision
         {
             get { return Bottom - Top; }
         }
+
         /// <summary>
         /// 面積 (幅 x 高さ)
         /// </summary>
@@ -85,14 +89,16 @@ public class DgDivision
     /// 外周の矩形情報
     /// </summary>
     public DgRect Outer;
+
     /// <summary>
     /// 区画内に作ったルーム情報
     /// </summary>
     public DgRect Room;
-	/// <summary>
-	/// 通路情報
-	/// </summary>
-	public DgRect Road;
+
+    /// <summary>
+    /// 通路情報
+    /// </summary>
+    public DgRect Road;
 
     /// <summary>
     /// コンストラクタ
@@ -101,27 +107,30 @@ public class DgDivision
     {
         Outer = new DgRect();
         Room = new DgRect();
-		Road = null;
+        Road = null;
     }
-	/// <summary>
-	/// 通路が存在するかどうか
-	/// </summary>
-	/// <returns><c>true</c>通路が存在すればtrue<c>false</c>通路をまだ作っていない</returns>
-	public bool HasRoad()
-	{
-		return Road != null;
-	}
-	/// <summary>
-	/// 通路を作成する
-	/// </summary>
-	/// <param name="left">左</param>
-	/// <param name="top">上</param>
-	/// <param name="right">右</param>
-	/// <param name="bottom">下</param>
-	public void CreateRoad(int left, int top, int right, int bottom)
-	{
-		Road = new DgRect(left, top, right, bottom);
-	}
+
+    /// <summary>
+    /// 通路が存在するかどうか
+    /// </summary>
+    /// <returns><c>true</c>通路が存在すればtrue<c>false</c>通路をまだ作っていない</returns>
+    public bool HasRoad()
+    {
+        return Road != null;
+    }
+
+    /// <summary>
+    /// 通路を作成する
+    /// </summary>
+    /// <param name="left">左</param>
+    /// <param name="top">上</param>
+    /// <param name="right">右</param>
+    /// <param name="bottom">下</param>
+    public void CreateRoad(int left, int top, int right, int bottom)
+    {
+        Road = new DgRect(left, top, right, bottom);
+    }
+
     /// <summary>
     /// デバッグ出力
     /// </summary>
@@ -129,9 +138,9 @@ public class DgDivision
     {
         Outer.Dump();
         Room.Dump();
-		if(Road != null)
-		{
-			Road.Dump();
-		}
+        if(Road != null)
+        {
+            Road.Dump();
+        }
     }
 }

@@ -51,27 +51,6 @@ public class DgGenerator : MonoBehaviour
     /// </summary>
     List<DgDivision> _divList = null;
 
-    /// チップ上のX座標を取得する.
-    float GetChipX(int i)
-    {
-        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
-        var spr = Util.GetSprite("wall1", "");
-        var sprW = spr.bounds.size.x;
-
-        return min.x + (sprW * i) + sprW / 2;
-    }
-
-    /// チップ上のy座標を取得する.
-    float GetChipY(int j)
-    {
-        Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
-        var spr = Util.GetSprite("wall1", "");
-        var sprH = spr.bounds.size.y;
-
-        return max.y - (sprH * j) - sprH / 2;
-    }
-
-
     void Start()
     {
         // ■1. 初期化
@@ -288,7 +267,7 @@ public class DgGenerator : MonoBehaviour
     }
 
     /// <summary>
-	/// DgRectの範囲を塗りつぶす
+    /// DgRectの範囲を塗りつぶす
     /// </summary>
     /// <param name="rect">矩形情報</param>
     void FillDgRect(DgDivision.DgRect r)
@@ -310,16 +289,16 @@ public class DgGenerator : MonoBehaviour
             // 2つの部屋をつなぐ通路を作成
             CreateRoad(a, b);
 
-			// 孫にも接続する
-			for(int j = i + 2; j < _divList.Count; j++)
-			{
-				DgDivision c = _divList[j];
-				if(CreateRoad(a, c, true))
-				{
-					// 孫に接続できたらおしまい
-					break;
-				}
-			}
+            // 孫にも接続する
+            for(int j = i + 2; j < _divList.Count; j++)
+            {
+                DgDivision c = _divList[j];
+                if(CreateRoad(a, c, true))
+                {
+                    // 孫に接続できたらおしまい
+                    break;
+                }
+            }
         }
     }
 
@@ -328,9 +307,9 @@ public class DgGenerator : MonoBehaviour
     /// </summary>
     /// <param name="divA">部屋1</param>
     /// <param name="divB">部屋2</param>
-	/// <param name="bGrandChild">孫チェックするかどうか</param>
+    /// <param name="bGrandChild">孫チェックするかどうか</param>
     /// <returns>つなぐことができたらtrue</returns>
-	bool CreateRoad(DgDivision divA, DgDivision divB, bool bGrandChild=false)
+    bool CreateRoad(DgDivision divA, DgDivision divB, bool bGrandChild=false)
     {
         if (divA.Outer.Bottom == divB.Outer.Top || divA.Outer.Top == divB.Outer.Bottom)
         {
@@ -340,31 +319,31 @@ public class DgGenerator : MonoBehaviour
             int x2 = Random.Range(divB.Room.Left, divB.Room.Right);
             int y  = 0;
 
-			if(bGrandChild)
-			{
-				// すでに通路が存在していたらその情報を使用する
-				if(divA.HasRoad()) { x1 = divA.Road.Left; }
-				if(divB.HasRoad()) { x2 = divB.Road.Left; }
-			}
+            if (bGrandChild)
+            {
+                // すでに通路が存在していたらその情報を使用する
+                if(divA.HasRoad()) { x1 = divA.Road.Left; }
+                if(divB.HasRoad()) { x2 = divB.Road.Left; }
+            }
 
             if (divA.Outer.Top > divB.Outer.Top)
             {
                 // B - A (Bが上側)
                 y = divA.Outer.Top;
                 // 通路を作成
-				divA.CreateRoad(x1, y + 1, x1 + 1, divA.Room.Top);
-				divB.CreateRoad(x2, divB.Room.Bottom, x2 + 1, y);
+                divA.CreateRoad(x1, y + 1, x1 + 1, divA.Room.Top);
+                divB.CreateRoad(x2, divB.Room.Bottom, x2 + 1, y);
             }
             else
             {
                 // A - B (Aが上側)
                 y = divB.Outer.Top;
                 // 通路を作成
-				divA.CreateRoad(x1, divA.Room.Bottom, x1 + 1, y);
-				divB.CreateRoad(x2, y, x2 + 1, divB.Room.Top);
+                divA.CreateRoad(x1, divA.Room.Bottom, x1 + 1, y);
+                divB.CreateRoad(x2, y, x2 + 1, divB.Room.Top);
             }
-			FillDgRect(divA.Road);
-			FillDgRect(divB.Road);
+            FillDgRect(divA.Road);
+            FillDgRect(divB.Road);
 
             // 通路同士を接続する
             FillHLine(x1, x2, y);
@@ -381,30 +360,30 @@ public class DgGenerator : MonoBehaviour
             int y2 = Random.Range(divB.Room.Top, divB.Room.Bottom);
             int x  = 0;
 
-			if(bGrandChild)
-			{
-				// すでに通路が存在していたらその情報を使う
-				if(divA.HasRoad()) { y1 = divA.Road.Top; }
-				if(divB.HasRoad()) { y2 = divB.Road.Top; }
-			}
+            if(bGrandChild)
+            {
+                // すでに通路が存在していたらその情報を使う
+                if(divA.HasRoad()) { y1 = divA.Road.Top; }
+                if(divB.HasRoad()) { y2 = divB.Road.Top; }
+            }
 
             if (divA.Outer.Left > divB.Outer.Left)
             {
                 // B - A (Bが左側)
                 x = divA.Outer.Left;
                 // 通路を作成
-				divB.CreateRoad(divB.Room.Right, y2, x, y2 + 1);
-				divA.CreateRoad(x + 1, y1, divA.Room.Left, y1 + 1);
+                divB.CreateRoad(divB.Room.Right, y2, x, y2 + 1);
+                divA.CreateRoad(x + 1, y1, divA.Room.Left, y1 + 1);
             }
             else
             {
                 // A - B (Aが左側)
                 x = divB.Outer.Left;
-				divA.CreateRoad(divA.Room.Right, y1, x, y1 + 1);
-				divB.CreateRoad(x, y2, divB.Room.Left, y2 + 1);
+                divA.CreateRoad(divA.Room.Right, y1, x, y1 + 1);
+                divB.CreateRoad(x, y2, divB.Room.Left, y2 + 1);
             }
-			FillDgRect(divA.Road);
-			FillDgRect(divB.Road);
+            FillDgRect(divA.Road);
+            FillDgRect(divB.Road);
 
             // 通路同士を接続する
             FillVLine(y1, y2, x);
@@ -412,7 +391,6 @@ public class DgGenerator : MonoBehaviour
             // 通路を作れた
             return true;
         }
-
 
         // つなげなかった
         return false;

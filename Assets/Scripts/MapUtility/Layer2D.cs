@@ -9,11 +9,13 @@ public class Layer2D
     int _height; // 高さ
     int _outOfRange = -1; // 領域外を指定した時の値
     int[] _values = null; // マップデータ
+
     /// 幅
     public int Width
     {
         get { return _width; }
     }
+
     /// 高さ
     public int Height
     {
