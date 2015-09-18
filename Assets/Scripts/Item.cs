@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// HACK クソコピペクラスなのでできたら修正
+
 //アイテムの基底クラス
 public abstract class Item 
 {
@@ -56,7 +58,6 @@ public abstract class OneTouchItem : Item {
 }
 
 // 手裏剣（スタックできる投擲アイテム )
-
 public class Shuriken : ItemWithDirection {
 	public override int MaxStack { get { return 20; } }
 	public override bool IsConsumable { get { return true; } }
@@ -80,26 +81,27 @@ public class Shuriken : ItemWithDirection {
 	}
 }
 
-// HP回復薬
-public class HPPortion : OneTouchItem {
+// お札
+public class Ofuda : ItemWithDirection {
 	public override int MaxStack { get { return 1; } }
 	public override bool IsConsumable { get { return true; } }
-
 	public override bool IsAvailable() {
-		// ここに、ケモミがアイテムを使えなさそうなモーション中だったらfalseを返す処理を追加してください
-		// return false;
+		// ここに、ケモミがお札を撃てなさそうなモーション中だったらfalseを返す処理を追加してください
 		return true;
 	}
 	
-	public override bool Effect() {
+	public override bool Action(float direction) {
 		if (!IsAvailable()) {
 			return false;
 		}
-		Debug.Log("薬を飲みました");
+		
+		// ここでお札処理をしてください
+		Debug.Log(direction + "の方向にお札を投げました");
+		
 		return true;
 	}
-
-	public HPPortion(string name, int id, string desc, string itemIconPath):base(name,id,desc,itemIconPath){
+	
+	public Ofuda(string name, int id, string desc, string itemIconPath):base(name,id,desc,itemIconPath){
 	}
 }
 
@@ -123,8 +125,172 @@ public class Taiatari : ItemWithDirection {
 		Debug.Log(direction + "の方向に体当たりしました");
 		return true;
 	}
-
+	
 	public Taiatari(string name, int id, string desc, string itemIconPath):base(name,id,desc,itemIconPath){
 	}
 }
 
+// 衝撃波
+public class Shougekiha : ItemWithDirection {
+	public override int MaxStack { get { return 1; } }
+	public override bool IsConsumable { get { return false; } }
+	
+	public override bool IsAvailable() {
+		// ここに、ケモミがスキルを発動できなさそうなモーション中だったらfalseを返す処理を追加してください
+		// ここに、ケモミのSPが30未満だったらfalseを返す処理を追加してください
+		
+		return true;
+	}
+	
+	public override bool Action(float direction) {
+		if (!IsAvailable()) {
+			return false;
+		}
+		// ここでケモミちゃんに衝撃波処理をしてください
+		Debug.Log(direction + "の方向に衝撃波しました");
+		return true;
+	}
+	
+	public Shougekiha(string name, int id, string desc, string itemIconPath):base(name,id,desc,itemIconPath){
+	}
+}
+
+
+
+// HP回復薬
+public class HPPortion : OneTouchItem {
+	public override int MaxStack { get { return 1; } }
+	public override bool IsConsumable { get { return true; } }
+
+	public override bool IsAvailable() {
+		// ここに、ケモミがアイテムを使えなさそうなモーション中だったらfalseを返す処理を追加してください
+		// return false;
+		return true;
+	}
+	
+	public override bool Effect() {
+		if (!IsAvailable()) {
+			return false;
+		}
+		Debug.Log("HP薬を飲みました");
+		return true;
+	}
+
+	public HPPortion(string name, int id, string desc, string itemIconPath):base(name,id,desc,itemIconPath){
+	}
+}
+
+// SP無限薬
+public class SPMugenPortion : OneTouchItem {
+	public override int MaxStack { get { return 1; } }
+	public override bool IsConsumable { get { return true; } }
+	
+	public override bool IsAvailable() {
+		// ここに、ケモミがアイテムを使えなさそうなモーション中だったらfalseを返す処理を追加してください
+		// return false;
+		return true;
+	}
+	
+	public override bool Effect() {
+		if (!IsAvailable()) {
+			return false;
+		}
+		Debug.Log("SP無限薬を飲みました");
+		return true;
+	}
+	
+	public SPMugenPortion(string name, int id, string desc, string itemIconPath):base(name,id,desc,itemIconPath){
+	}
+}
+
+// 復活草
+public class FukkatsuSou : OneTouchItem {
+	public override int MaxStack { get { return 1; } }
+	public override bool IsConsumable { get { return true; } }
+	
+	public override bool IsAvailable() {
+		// ここに、ケモミがアイテムを使えなさそうなモーション中だったらfalseを返す処理を追加してください
+		// return false;
+		return true;
+	}
+	
+	public override bool Effect() {
+		if (!IsAvailable()) {
+			return false;
+		}
+		Debug.Log("復活草を飲みました");
+		return true;
+	}
+	
+	public FukkatsuSou(string name, int id, string desc, string itemIconPath):base(name,id,desc,itemIconPath){
+	}
+}
+
+//ランダムマップ移動
+public class RandomMapIdou : OneTouchItem {
+	public override int MaxStack { get { return 1; } }
+	public override bool IsConsumable { get { return true; } }
+	
+	public override bool IsAvailable() {
+		// ここに、ケモミがアイテムを使えなさそうなモーション中だったらfalseを返す処理を追加してください
+		// return false;
+		return true;
+	}
+	
+	public override bool Effect() {
+		if (!IsAvailable()) {
+			return false;
+		}
+		Debug.Log("復活草を飲みました");
+		return true;
+	}
+	
+	public RandomMapIdou(string name, int id, string desc, string itemIconPath):base(name,id,desc,itemIconPath){
+	}
+}
+
+//打ち上げ花火
+public class UchiageHanabi : OneTouchItem {
+	public override int MaxStack { get { return 1; } }
+	public override bool IsConsumable { get { return true; } }
+	
+	public override bool IsAvailable() {
+		// ここに、ケモミがアイテムを使えなさそうなモーション中だったらfalseを返す処理を追加してください
+		// return false;
+		return true;
+	}
+	
+	public override bool Effect() {
+		if (!IsAvailable()) {
+			return false;
+		}
+		Debug.Log("打ち上げ花火を飲みました");
+		return true;
+	}
+	
+	public UchiageHanabi(string name, int id, string desc, string itemIconPath):base(name,id,desc,itemIconPath){
+	}
+}
+
+//回転斬り
+public class Kaitengiri : OneTouchItem {
+	public override int MaxStack { get { return 1; } }
+	public override bool IsConsumable { get { return false; } }
+	
+	public override bool IsAvailable() {
+		// ここに、ケモミがアイテムを使えなさそうなモーション中だったらfalseを返す処理を追加してください
+		// return false;
+		return true;
+	}
+	
+	public override bool Effect() {
+		if (!IsAvailable()) {
+			return false;
+		}
+		Debug.Log("打ち上げ花火を飲みました");
+		return true;
+	}
+	
+	public Kaitengiri(string name, int id, string desc, string itemIconPath):base(name,id,desc,itemIconPath){
+	}
+}

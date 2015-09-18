@@ -19,7 +19,7 @@ public class InventoryManager : MonoBehaviour {
 	private Vector2 inputEndPos;
 	private int inputEndInventoryIndex;
 
-	private const float SCREENSCALE = 4;
+	private const float SCREENSCALE = 2;
 
 
 	void Start () {
@@ -79,8 +79,6 @@ public class InventoryManager : MonoBehaviour {
 			GUI.Box (inventory[i].slotRect, slotCountString, skin.GetStyle ("slot")); 
 
 			// アイテムアイコン
-			print ("moving="+movingInventoryIndex);
-			print ("i="+i);
 			if (inventory[i].item.itemName != null && i != movingInventoryIndex) GUI.DrawTexture (inventory[i].slotRect, inventory[i].item.itemIcon);
 
 			//選択されているアイテムの光
@@ -156,7 +154,7 @@ public class InventoryManager : MonoBehaviour {
 				break;
 			}
 
-			//
+			// 入力が必要な描画なので仕方なくdrawInventoryでなくここに書いてる
 			if (inputBeganInventoryIndex != -1 && !inventory[inputBeganInventoryIndex].slotRect.Contains(touchPos)){
 				movingInventoryIndex = inputBeganInventoryIndex;
 				GUI.DrawTexture(new Rect(touchPos.x - 32, touchPos.y - 32, SCREENSCALE*32, SCREENSCALE*32), inventory[inputBeganInventoryIndex].item.itemIcon);
