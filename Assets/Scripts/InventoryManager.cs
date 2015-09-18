@@ -6,12 +6,12 @@ public class InventoryManager : MonoBehaviour {
 	public int inventorySize; //スロット数
 	public GUISkin skin; //スロットのスキン
     public List<Slot> inventory = new List<Slot>();
+	public List<Item> items = new List<Item>(); //全アイテムのリスト
 	public int selectedInventoryIndex;
 	public int movingInventoryIndex;
 	public int movingFingerId;
 	public bool isShowingInventory; //trueのときインベントリを表示
-
-    private ItemDB itemDB; //全アイテムのリスト
+	
 
 	private Vector2 inputBeganPos;
 	private int inputBeganInventoryIndex;
@@ -22,6 +22,20 @@ public class InventoryManager : MonoBehaviour {
 
 	private const float SCREENSCALE = 2;
 
+	void Awake(){
+		// string name, int id, string desc, string itemIconPath
+		items.Add(new EmptyItem("", 0, "", ""));
+		items.Add(new Shuriken("手裏剣", 1, "", "Shuriken"));
+		items.Add(new HPPortion("HP回復薬", 2, "", "HPPortion"));
+		items.Add(new Taiatari("体当たり", 3, "", "Taiatari"));
+		items.Add(new Ofuda("お札", 4, "", "Ofuda"));
+		items.Add(new SPMugenPortion("SP無限薬", 5, "", "SPMugenPortion"));
+		items.Add(new FukkatsuSou("復活草", 6, "", "FukkatsuSou"));
+		items.Add(new RandomMapIdou("ランダムマップ移動", 7, "", "RandomMapIdou"));
+		items.Add(new UchiageHanabi("打ち上げ花火", 8, "", "UchiageHanabi"));
+		items.Add(new Shougekiha("衝撃波", 9, "", "Shougekiha"));
+		items.Add(new Kaitengiri("回転斬り", 10, "", "Kaitengiri"));
+	}
 
 	void Start () {
 
@@ -30,8 +44,7 @@ public class InventoryManager : MonoBehaviour {
 		for (int i=0; i<inventorySize; i++){
 			inventory.Add(new Slot(i, SCREENSCALE));
 		}
-
-        itemDB = GameObject.FindGameObjectWithTag("ItemDB").GetComponent<ItemDB>();
+	
 
 		selectedInventoryIndex = -1;
 		movingInventoryIndex = -1;
@@ -198,7 +211,7 @@ public class InventoryManager : MonoBehaviour {
 	}
 
 	//スロットのスワップ
-	// HACK Slotをスワップするとなぜか動かないのでアイテムと個数をばらばらにスワップ
+	// HACK: Slotをスワップするとなぜか動かないのでアイテムと個数をばらばらにスワップ
 	void swapItem(int from, int to){
 		Item tmp = inventory[from].item;
 		int tmpCount = inventory [from].itemCount;
@@ -237,9 +250,9 @@ public class InventoryManager : MonoBehaviour {
 		//スタックできないアイテムは登録
 		for (int i=0; i<inventory.Count; i++) { 
 			if (inventory[i].item.itemName == null){
-				for (int j=0; j<itemDB.items.Count; j++) {
-					if (itemDB.items[j].itemID == id) {
-						inventory[i].item = itemDB.items[j];
+				for (int j=0; j<items.Count; j++) {
+					if (items[j].itemID == id) {
+						inventory[i].item = items[j];
 						inventory[i].itemCount = 1;
 						return true;
 					}
