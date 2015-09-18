@@ -8,6 +8,7 @@ public class InventoryManager : MonoBehaviour {
     public List<Slot> inventory = new List<Slot>();
 	public int selectedInventoryIndex;
 	public int movingInventoryIndex;
+	public int movingFingerId;
 	public bool isShowingInventory; //trueのときインベントリを表示
 
     private ItemDB itemDB; //全アイテムのリスト
@@ -34,15 +35,18 @@ public class InventoryManager : MonoBehaviour {
 
 		selectedInventoryIndex = -1;
 		movingInventoryIndex = -1;
+		movingFingerId = -1;
 		inputBeganInventoryIndex = -1;
 		inputPrevInventoryIndex = -1;
 		inputEndInventoryIndex = -1;
 
+
 		//デバッグ用
-		obtainItem (1);
-		obtainItem (1);
-		obtainItem (1);
-		obtainItem (1);
+		obtainItem (1);obtainItem (1);obtainItem (1);obtainItem (1);obtainItem (1);
+		obtainItem (1);obtainItem (1);obtainItem (1);obtainItem (1);obtainItem (1);
+		obtainItem (1);obtainItem (1);obtainItem (1);obtainItem (1);obtainItem (1);
+		obtainItem (1);obtainItem (1);obtainItem (1);obtainItem (1);obtainItem (1);
+		obtainItem (1);obtainItem (1);obtainItem (1);obtainItem (1);obtainItem (1);
 		obtainItem (2);
 		obtainItem (2);
 		obtainItem (3);
@@ -64,8 +68,8 @@ public class InventoryManager : MonoBehaviour {
 		if (isShowingInventory){
 			Touch[] touches = Input.touches;
 
-			inputOnInventory(touches);
 			drawInventory ();
+			inputOnInventory(touches);
 		}
 	}
 
@@ -89,9 +93,11 @@ public class InventoryManager : MonoBehaviour {
 
 	void inputOnInventory(Touch[] touches){
 
-		foreach (var touch in Input.touches) { // 1箇所以上タッチされている時
+		foreach (var touch in Input.touches) { 
 			Vector2 touchPos = new Vector2 (touch.position.x, Screen.height - touch.position.y);
 //			print (touchPos);
+			// ドラッグ状態の時はその指1本しかトラックしない
+			if ( !(movingFingerId == -1 || movingFingerId == touch.fingerId) ) break;
 			switch (touch.phase) {
 			//タッチ開始時
 			case TouchPhase.Began:
@@ -114,6 +120,12 @@ public class InventoryManager : MonoBehaviour {
 						inputPrevInventoryIndex = i;
 //						print ("inventory["+i+"]moving");
 					}
+				}
+
+				// 指をスロットからはみ出すように動かした場合はドラッグ状態に移行してそれ以外の指をブロック
+				if (inputBeganInventoryIndex != -1 && !inventory[inputBeganInventoryIndex].slotRect.Contains(touchPos)){
+					movingFingerId = touch.fingerId;
+					movingInventoryIndex = inputBeganInventoryIndex;
 				}
 
 				break;
@@ -146,19 +158,19 @@ public class InventoryManager : MonoBehaviour {
 				// print ("endindex =" + inputEndInventoryIndex);
 
 				//タッチ終了時にリセット
+				
 				inputBeganInventoryIndex = -1;
 				inputPrevInventoryIndex = -1;
 				inputEndInventoryIndex = -1; 
 				movingInventoryIndex = -1;
+				movingFingerId = -1;
 				
 				break;
 			}
 
-			// 入力が必要な描画なので仕方なくdrawInventoryでなくここに書いてる
-			if (inputBeganInventoryIndex != -1 && !inventory[inputBeganInventoryIndex].slotRect.Contains(touchPos)){
-				movingInventoryIndex = inputBeganInventoryIndex;
-				GUI.DrawTexture(new Rect(touchPos.x - 32, touchPos.y - 32, SCREENSCALE*32, SCREENSCALE*32), inventory[inputBeganInventoryIndex].item.itemIcon);
-			}
+				// 入力が必要な描画なので仕方なくdrawInventoryでなくここに書いてる
+				if (movingFingerId != -1) GUI.DrawTexture(new Rect(touchPos.x - 32, touchPos.y - 32, SCREENSCALE*32, SCREENSCALE*32), inventory[inputBeganInventoryIndex].item.itemIcon);
+			
 		}
 	}
 
