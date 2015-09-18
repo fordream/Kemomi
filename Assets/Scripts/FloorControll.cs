@@ -45,10 +45,10 @@ public class FloorControll : MonoBehaviour {
     private void generateMap() {
 
         // 全マップチップのプレハブを読み込む
-        var wallPrefab = (GameObject)Resources.Load("Prefabs/Wall");
-        var roadPrefab = (GameObject)Resources.Load("Prefabs/Road");
-        var roomPrefab = (GameObject)Resources.Load("Prefabs/Room");
-        var gatePrefab = (GameObject)Resources.Load("Prefabs/Gate");
+        var wallPrefab = (GameObject)Resources.Load("Prefabs/MapChip/Wall");
+        var roadPrefab = (GameObject)Resources.Load("Prefabs/MapChip/Road");
+        var roomPrefab = (GameObject)Resources.Load("Prefabs/MapChip/Room");
+        var gatePrefab = (GameObject)Resources.Load("Prefabs/MapChip/Gate");
 
         // マップチップの幅を取得
         var chipSize = wallPrefab.GetComponent<SpriteRenderer>().bounds.size.x * 0.8f;
