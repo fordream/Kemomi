@@ -9,11 +9,17 @@ public class FloorControll : MonoBehaviour {
     // ゲーム状態
     private GameStatus gameStatus;
 
+    // マップ
+    private GameObject map;
+
     // ゲームオブジェクトを初期化する
     void Start() {
 
         // ゲームオブジェクトからゲーム状態クラスのインスタンスを取得する
         gameStatus = GameObject.Find("GameStatus").GetComponent<GameStatus>();
+
+        // Mapゲームオブジェクトを取得する
+        map = GameObject.Find("Map");
 
         Debug.Log("FloorStarted. FloorLevel: " + gameStatus.FloorLevel);
 
@@ -48,13 +54,13 @@ public class FloorControll : MonoBehaviour {
         var chipSize = wallPrefab.GetComponent<SpriteRenderer>().bounds.size.x * 0.8f;
 
         // ランダムマップパターンを生成
-        var map = MapUtility.MapGenerator.Generate();
+        var mapArray = MapUtility.MapGenerator.Generate();
 
         // 対応するプレハブからマップチップのゲームオブジェクトを生成
-        for (int x = 0; x < map.GetLength(0); x++) {
-            for (int y = 0; y < map.GetLength(1); y++) {
+        for (int x = 0; x < mapArray.GetLength(0); x++) {
+            for (int y = 0; y < mapArray.GetLength(1); y++) {
                 GameObject prefab = null;
-                switch (map[x, y]) {
+                switch (mapArray[x, y]) {
                     case MapChip.Wall:
                         prefab = wallPrefab;
                         break;
@@ -69,7 +75,8 @@ public class FloorControll : MonoBehaviour {
                         break;
                 }
                 if (prefab != null) {
-                    Instantiate(prefab, new Vector3(chipSize * x, chipSize * y, 0), Quaternion.identity);
+                    GameObject mapChipObject = (GameObject)Instantiate(prefab, new Vector3(chipSize * x, chipSize * y, 0), Quaternion.identity);
+                    mapChipObject.transform.parent = map.transform;
                 }
             }
         }
