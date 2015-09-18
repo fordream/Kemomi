@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using System.Collections;
+using MapUtility;
 
 // Floorシーンを制御するクラス
 public class FloorControll : MonoBehaviour {
@@ -7,11 +9,17 @@ public class FloorControll : MonoBehaviour {
     // ゲーム状態
     private GameStatus gameStatus;
 
+    // マップ
+    private GameObject map;
+
     // ゲームオブジェクトを初期化する
     void Start() {
 
         // ゲームオブジェクトからゲーム状態クラスのインスタンスを取得する
         gameStatus = GameObject.Find("GameStatus").GetComponent<GameStatus>();
+
+        // Mapゲームオブジェクトを取得する
+        map = GameObject.Find("Map");
 
         Debug.Log("FloorStarted. FloorLevel: " + gameStatus.FloorLevel);
 
@@ -35,32 +43,41 @@ public class FloorControll : MonoBehaviour {
 
     // マップ生成
     private void generateMap() {
-        //var mapGenerator = new MapGenerator();
-        var map = MapUtility.MapGenerator.Generate();
 
-        for (int x = 0; x < map.GetLength(0); x++) {
-            for (int y = 0; y < map.GetLength(1); y++) {
-                string prefabId = "";
-                if (map[x, y] == MapUtility.MapGenerator.CHIP_WALL) {
-                    prefabId = "Prefabs/Wall";
-                }
-                if (map[x, y] == MapUtility.MapGenerator.CHIP_NONE) {
-                    prefabId = "Prefabs/Road";
-                }
-                if (map[x, y] == 3) {
-                    prefabId = "Prefabs/Room";
-                }
-                if (map[x, y] == 4) {
-                    prefabId = "Prefabs/Gate";
-                }
+        // 全マップチップのプレハブを読み込む
+        var wallPrefab = (GameObject)Resources.Load("Prefabs/MapChip/Wall");
+        var roadPrefab = (GameObject)Resources.Load("Prefabs/MapChip/Road");
+        var roomPrefab = (GameObject)Resources.Load("Prefabs/MapChip/Room");
+        var gatePrefab = (GameObject)Resources.Load("Prefabs/MapChip/Gate");
 
+        // マップチップの幅を取得
+        var chipSize = wallPrefab.GetComponent<SpriteRenderer>().bounds.size.x * 0.8f;
 
-                var prefab = (GameObject)Resources.Load(prefabId);
-                var scriptRenderer = prefab.GetComponent<SpriteRenderer>();
-                var wallWidth = scriptRenderer.bounds.size.x * 0.8f;
-                var wallHeight = scriptRenderer.bounds.size.y * 0.8f;
+        // ランダムマップパターンを生成
+        var mapArray = MapUtility.MapGenerator.Generate();
 
-                Instantiate(prefab, new Vector3(wallWidth * x, wallHeight * y, 0), Quaternion.identity);
+        // 対応するプレハブからマップチップのゲームオブジェクトを生成
+        for (int x = 0; x < mapArray.GetLength(0); x++) {
+            for (int y = 0; y < mapArray.GetLength(1); y++) {
+                GameObject prefab = null;
+                switch (mapArray[x, y]) {
+                    case MapChip.Wall:
+                        prefab = wallPrefab;
+                        break;
+                    case MapChip.Road:
+                        prefab = roadPrefab;
+                        break;
+                    case MapChip.Room:
+                        prefab = roomPrefab;
+                        break;
+                    case MapChip.Gate:
+                        prefab = gatePrefab;
+                        break;
+                }
+                if (prefab != null) {
+                    GameObject mapChipObject = (GameObject)Instantiate(prefab, new Vector3(chipSize * x, chipSize * y, 0), Quaternion.identity);
+                    mapChipObject.transform.parent = map.transform;
+                }
             }
         }
     }

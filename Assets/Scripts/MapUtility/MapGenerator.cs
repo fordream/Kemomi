@@ -58,7 +58,7 @@ public static class MapGenerator
     /// マップを作成する
     /// </summary>
     /// <returns>タイルの二次元配列</returns>
-    public static int[,] Generate()
+    public static MapChip[,] Generate()
     {
         // ■1. 初期化
         // 2次元配列初期化
@@ -94,13 +94,13 @@ public static class MapGenerator
         return findGate(_layer.ToArray());
     }
 
-    private static int[,] findGate(int[,] array) {
+    private static MapChip[,] findGate(MapChip[,] array) {
         for (int x = 0; x < array.GetLength(0); x++) {
             for (int y = 0; y < array.GetLength(1); y++) {
-                if (array[x, y] == CHIP_NONE) {
-                    if (array[x - 1, y] == 3 || array[x + 1, y] == 3 ||
-                            array[x, y - 1] == 3 || array[x, y + 1] == 3) {
-                        array[x, y] = 4;
+                if (array[x, y] == MapChip.Road) {
+                    if (array[x - 1, y] == MapChip.Room || array[x + 1, y] == MapChip.Room ||
+                            array[x, y - 1] == MapChip.Room || array[x, y + 1] == MapChip.Room) {
+                        array[x, y] = MapChip.Gate;
                     }
                 }
             }
@@ -282,16 +282,7 @@ public static class MapGenerator
     /// <param name="rect">矩形情報</param>
     private static void FillDgRectRoad(DgDivision.DgRect r)
     {
-        _layer.FillRectLTRB(r.Left, r.Top, r.Right, r.Bottom, CHIP_NONE);
-    }
-
-    /// <summary>
-    /// DgRectの範囲を塗りつぶす
-    /// </summary>
-    /// <param name="rect">矩形情報</param>
-    private static void FillDgRectGate(DgDivision.DgRect r)
-    {
-        _layer.FillRectLTRB(r.Left, r.Top, r.Right, r.Bottom, 4);
+        _layer.FillRectLTRB(r.Left, r.Top, r.Right, r.Bottom, 2);
     }
 
     /// <summary>
@@ -430,7 +421,7 @@ public static class MapGenerator
             left = right;
             right = tmp;
         }
-        _layer.FillRectLTRB(left, y, right + 1, y + 1, CHIP_NONE);
+        _layer.FillRectLTRB(left, y, right + 1, y + 1, 2);
     }
 
     /// <summary>
@@ -448,7 +439,7 @@ public static class MapGenerator
             top = bottom;
             bottom = tmp;
         }
-        _layer.FillRectLTRB(x, top, x + 1, bottom + 1, CHIP_NONE);
+        _layer.FillRectLTRB(x, top, x + 1, bottom + 1, 2);
     }
 
 }
