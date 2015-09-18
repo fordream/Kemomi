@@ -4,19 +4,30 @@ using System.Collections;
 
 public class TouchManager : MonoBehaviour
 {
-
+    //==========公開フィールド==========
     //左手操作に使う変数
     public Vector2 leftDirection;
     public float leftAngle;
     public Vector2 basePoint;
     public bool leftAction = false;
     //右手操作に使う変数
+    public Vector2 flickVector;
+    public float flickTime;
+    public bool flicked = false;
+
+    //==========非公開フィールド==========
+    //右手操作に使う変数
     Vector2 startPos;
     Vector2 endPos;
-    public string bullet;
+    float beganTime = 0;
 
+
+    //==========基本コード==========
     void Update()
     {
+        flicked = false;
+
+        //MULTIタップ管理、左画面タッチと右画面タッチの処理の分け
         foreach (var touch in Input.touches)
         {
             if (touch.position.x < Screen.width * 0.5)
@@ -34,6 +45,7 @@ public class TouchManager : MonoBehaviour
         }
     }
 
+    //左画面操作
     public void leftCon(Touch touch)
     {
         if (leftAction == false)
@@ -58,25 +70,23 @@ public class TouchManager : MonoBehaviour
 
     }
 
+    //右画面操作
     public void rightCon(Touch touch)
     {
-        GameObject gameobject = GameObject.Find(bullet);
-
         switch (touch.phase)
         {
             case TouchPhase.Began:
+                beganTime = Time.time;
                 startPos = touch.position;
                 break;
 
-            case TouchPhase.Moved:
-                break;
-
             case TouchPhase.Ended:
+                if (beganTime - Time.time < flickTime)
+                    flicked = true;
                 endPos = touch.position;
                 Vector2 direction = new Vector2(endPos.x - startPos.x, endPos.y - startPos.y);
                 float radian = Mathf.Atan2(direction.y, direction.x);
-                Debug.Log("magnitude : " + direction.magnitude);
-                if (direction.magnitude > 8) gameobject.GetComponent<Rigidbody2D>().velocity = new Vector2(4 * Mathf.Cos(radian), 4 * Mathf.Sin(radian));
+                flickVector = new  Vector2( Mathf.Cos(radian), Mathf.Sin(radian));
                 break;
 
         }
