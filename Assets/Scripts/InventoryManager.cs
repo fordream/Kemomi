@@ -5,10 +5,10 @@ using System.Collections.Generic;
 public class InventoryManager : MonoBehaviour {
 	public int inventorySize; //スロット数
 	public GUISkin skin; //スロットのスキン
-    public List<Item> inventory = new List<Item>();
+    public List<Slot> inventory = new List<Slot>();
 	public int selectedInventoryIndex;
-	public List<Rect> inventoryRects = new List<Rect>(); //各スロットの四角
-	public bool showInventory; //trueのときインベントリを表示
+	public int movingInventoryIndex;
+	public bool isShowingInventory; //trueのときインベントリを表示
 
     private ItemDB itemDB; //全アイテムのリスト
 
@@ -17,19 +17,24 @@ public class InventoryManager : MonoBehaviour {
 	private Vector2 inputPrevPos;
 	private int inputPrevInventoryIndex;
 	private Vector2 inputEndPos;
-	private int inputEndInventoryIndex; 
+	private int inputEndInventoryIndex;
+
+	private const float SCREENSCALE = 4;
 
 
 	void Start () {
-		showInventory = true;
-		for (int i=0; i<inventorySize; i++){
-			inventory.Add(new EmptyItem());
 
-			//インベントリのレイアウト
-			inventoryRects.Add(new Rect(Screen.width - 2*32 - 2*42 * i, Screen.height - 2*32, 2*32, 2*32));
+		isShowingInventory = true;
+
+		for (int i=0; i<inventorySize; i++){
+			inventory.Add(new Slot());
+			inventory[i].slotRect = (new Rect(Screen.width - SCREENSCALE*32 - SCREENSCALE*42 * i, Screen.height - SCREENSCALE*32, SCREENSCALE*32, SCREENSCALE*32));
 		}
+
         itemDB = GameObject.FindGameObjectWithTag("ItemDB").GetComponent<ItemDB>();
+
 		selectedInventoryIndex = -1;
+		movingInventoryIndex = -1;
 		inputBeganInventoryIndex = -1;
 		inputPrevInventoryIndex = -1;
 		inputEndInventoryIndex = -1;
@@ -56,8 +61,10 @@ public class InventoryManager : MonoBehaviour {
 	//GUIイベントが発生するたびに呼ばれる
 	void OnGUI(){
 		GUI.skin = skin;
-		if (showInventory){
+
+		if (isShowingInventory){
 			Touch[] touches = Input.touches;
+
 			inputOnInventory(touches);
 			drawInventory ();
 		}
@@ -67,15 +74,17 @@ public class InventoryManager : MonoBehaviour {
 		for (int i=0; i<inventorySize; i++) {
 
 			// ボックスと個数
-			string inventoryCount = "";
-			if (inventory[i].itemCount > 1) inventoryCount = inventory[i].itemCount.ToString ();
-			GUI.Box (inventoryRects[i], inventoryCount, skin.GetStyle ("slot")); 
+			string slotCountString = "";
+			if (inventory[i].itemCount > 1) slotCountString = inventory[i].itemCount.ToString ();
+			GUI.Box (inventory[i].slotRect, slotCountString, skin.GetStyle ("slot")); 
 
 			// アイテムアイコン
-			if (inventory[i].itemName != null) GUI.DrawTexture (inventoryRects[i], inventory[i].itemIcon);
+			print ("moving="+movingInventoryIndex);
+			print ("i="+i);
+			if (inventory[i].item.itemName != null && i != movingInventoryIndex) GUI.DrawTexture (inventory[i].slotRect, inventory[i].item.itemIcon);
 
 			//選択されているアイテムの光
-			if (selectedInventoryIndex != -1) GUI.DrawTexture (inventoryRects[selectedInventoryIndex], Resources.Load<Texture2D> ("ItemIcons/selected")); 
+			if (selectedInventoryIndex != -1) GUI.DrawTexture (inventory[selectedInventoryIndex].slotRect, Resources.Load<Texture2D> ("ItemIcons/selected")); 
 
 		}
 	}
@@ -91,7 +100,7 @@ public class InventoryManager : MonoBehaviour {
 				inputBeganPos = touchPos;
 				inputPrevPos = touchPos;
 				for(int i=0; i<inventorySize; i++){
-					if (inventoryRects[i].Contains (inputBeganPos)) {
+					if (inventory[i].slotRect.Contains (inputBeganPos)) {
 						inputBeganInventoryIndex = i;
 						inputPrevInventoryIndex = i;
 //						print ("inventory["+i+"]began");
@@ -103,21 +112,19 @@ public class InventoryManager : MonoBehaviour {
 			case TouchPhase.Moved:
 				inputPrevPos = touchPos;
 				for(int i=0; i<inventorySize; i++){
-					if (inventoryRects[i].Contains (inputPrevPos)) {
+					if (inventory[i].slotRect.Contains (inputPrevPos)) {
 						inputPrevInventoryIndex = i;
 //						print ("inventory["+i+"]moving");
 					}
 				}
-					if (inputPrevInventoryIndex != -1 && !inventoryRects[inputPrevInventoryIndex].Contains(touchPos)){
-						
-					}
+
 				break;
 			
 			//タッチ終了時
 			case TouchPhase.Ended:
-				inputEndPos = touchPos;
+				inputEndPos = touchPos; 
 				for(int i=0; i<inventorySize; i++){
-					if (inventoryRects[i].Contains (inputEndPos)) {
+					if (inventory[i].slotRect.Contains (inputEndPos)) {
 						inputPrevInventoryIndex = i;
 						inputEndInventoryIndex = i;
 //						print ("inventory["+i+"]end");
@@ -127,11 +134,11 @@ public class InventoryManager : MonoBehaviour {
 				//タップ時 タッチ開始スロットとタッチ終了スロットが両方存在して同じ時
 				if (inputBeganInventoryIndex == inputEndInventoryIndex && inputEndInventoryIndex != -1) {
 					tapItem (inputEndInventoryIndex);
-				}//入れ替え時 タッチ開始スロットとタッチ終了スロットが両方存在して違うとき
+				}//入れ替え時
 				
 				else if (inputBeganInventoryIndex != -1 && inputEndInventoryIndex != -1) {
 					switchItemByInventoryIndex (inputBeganInventoryIndex, inputEndInventoryIndex);
-				}//スワイプで捨てるとき タッチ開始スロットが存在してタッチ終了点は上のほうとき
+				}//スワイプで捨てるとき 
 				else if (inputBeganInventoryIndex != -1 && inputEndPos.y < Screen.height / 1.5){
 					removeItemByInventoryIndex(inputBeganInventoryIndex);
 				}
@@ -144,8 +151,15 @@ public class InventoryManager : MonoBehaviour {
 				inputBeganInventoryIndex = -1;
 				inputPrevInventoryIndex = -1;
 				inputEndInventoryIndex = -1; 
+				movingInventoryIndex = -1;
 				
 				break;
+			}
+
+			//
+			if (inputBeganInventoryIndex != -1 && !inventory[inputBeganInventoryIndex].slotRect.Contains(touchPos)){
+				movingInventoryIndex = inputBeganInventoryIndex;
+				GUI.DrawTexture(new Rect(touchPos.x - 32, touchPos.y - 32, SCREENSCALE*32, SCREENSCALE*32), inventory[inputBeganInventoryIndex].item.itemIcon);
 			}
 		}
 	}
@@ -153,7 +167,7 @@ public class InventoryManager : MonoBehaviour {
 	//アイテムタップ時の処理
 	void tapItem(int tappedInventoryIndex){
 		// 選択したあとフリックして撃つアイテムの場合
-		if (inventory[tappedInventoryIndex] is ItemWithDirection) {
+		if (inventory[tappedInventoryIndex].item is ItemWithDirection) {
 			
 			//選択されているアイテムを再びタップした場合選択解除
 			if (tappedInventoryIndex == selectedInventoryIndex) {
@@ -164,10 +178,10 @@ public class InventoryManager : MonoBehaviour {
 				selectedInventoryIndex = tappedInventoryIndex;
 			}
 		// ワンタッチアイテムの場合
-		}else if(inventory[tappedInventoryIndex] is OneTouchItem) {
+		}else if(inventory[tappedInventoryIndex].item is OneTouchItem) {
 			// ワンタッチアイテムを使用し、正常に消費されたら選択解除
-			if (((OneTouchItem)inventory[tappedInventoryIndex]).Effect()) {
-				consumeItemByItemId(inventory[tappedInventoryIndex].itemID);
+			if (((OneTouchItem)inventory[tappedInventoryIndex].item).Effect()) {
+				consumeItemByItemId(inventory[tappedInventoryIndex].item.itemID);
 				selectedInventoryIndex = -1;
 			}
 		}
@@ -175,25 +189,25 @@ public class InventoryManager : MonoBehaviour {
 
 	//スロットのスワップ
 	void switchItemByInventoryIndex(int from, int to){
-		Item tmp = inventory[from];
-		inventory [from] = inventory [to];
-		inventory [to] = tmp;
+		Item tmp = inventory[from].item;
+		inventory[from].item = inventory[to].item;
+		inventory[to].item = tmp;
 		selectedInventoryIndex = -1;
 	}
 
 	//アイテム消費 個数を1へらす 残り1個のときは空にする
 	void consumeItemByItemId(int id){
 		for (int i=0; i<inventory.Count; i++) {
-			if (inventory[i].itemID == id){
+			if (inventory[i].item.itemID == id){
 				if(inventory[i].itemCount > 1) inventory[i].itemCount--;
-				else inventory[i] = new EmptyItem();
+				else inventory[i].item = new EmptyItem();
 			}
 		}
 	}
 
 	//アイテムをスワイプして捨てる
 	void removeItemByInventoryIndex(int inventoryIndex){
-		inventory[inventoryIndex] = new EmptyItem();
+		inventory[inventoryIndex].item = new EmptyItem();
 		selectedInventoryIndex = -1;
 	}
 
@@ -201,17 +215,17 @@ public class InventoryManager : MonoBehaviour {
 	bool obtainItem(int id){
 		//すでに持っていてスタックできるアイテムの場合は個数を増やす
 		for (int i=0; i<inventory.Count; i++) { 
-			if (inventory[i].itemID == id && inventory[i].itemCount < inventory[i].MaxStack) {
+			if (inventory[i].item.itemID == id && inventory[i].itemCount < inventory[i].item.MaxStack) {
 				inventory[i].itemCount++;
 				return true;
 			}
 		}
 		//スタックできないアイテムは登録
 		for (int i=0; i<inventory.Count; i++) { 
-			if (inventory[i].itemName == null){
+			if (inventory[i].item.itemName == null){
 				for (int j=0; j<itemDB.items.Count; j++) {
 					if (itemDB.items[j].itemID == id) {
-						inventory[i] = itemDB.items[j];
+						inventory[i].item = itemDB.items[j];
 						inventory[i].itemCount = 1;
 						return true;
 					}
@@ -226,7 +240,7 @@ public class InventoryManager : MonoBehaviour {
 	bool inventoryContains(int id){
 		bool result = false;
 		for (int i=0; i<inventory.Count; i++){
-			result = inventory[i].itemID == id;
+			result = inventory[i].item.itemID == id;
 			if(result){
 				break;
 			}

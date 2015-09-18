@@ -277,7 +277,8 @@ MonoBehaviour:
   inventorySize: 6
   skin: {fileID: 11400000, guid: c6650b48cde84496b8b0d6d3f9f36c72, type: 2}
   selectedInventoryIndex: -1
-  inventoryRects: []
+  movingInventoryIndex: 0
+  isShowingInventory: 0
 --- !u!1 &978625379
 GameObject:
   m_ObjectHideFlags: 0
