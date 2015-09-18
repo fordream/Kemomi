@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//アイテムの基底クラス
 public abstract class Item 
 {
 	public string itemName;        //名前
 	public int itemID;             //アイテムID
-	public int itemCount;		   // ima motteru kazu
+	public int itemCount;		   //今持ってる数
 	public string itemDesc;        //アイテムの説明文
 	public Texture2D itemIcon;     //アイコン
 
-	public abstract int MaxStack { get; } // saidai sutakku suu
+	public abstract int MaxStack { get; }
 	public abstract bool IsConsumable { get; }
 	public abstract bool IsAvailable();
+	
+	//itemDBで呼ぶコンストラクタ
 	public Item(string name, int id, string desc, string itemIconPath){
 		itemName = name;
 		itemID = id;
@@ -23,6 +26,8 @@ public abstract class Item
 	}
 }
 
+
+//空アイテム
 public class EmptyItem : Item {
 	public override int MaxStack { get{ return 1; } }
 	public override bool IsConsumable { get{ return false; } }
