@@ -27,8 +27,7 @@ public class InventoryManager : MonoBehaviour {
 		isShowingInventory = true;
 
 		for (int i=0; i<inventorySize; i++){
-			inventory.Add(new Slot());
-			inventory[i].slotRect = (new Rect(Screen.width - SCREENSCALE*32 - SCREENSCALE*42 * i, Screen.height - SCREENSCALE*32, SCREENSCALE*32, SCREENSCALE*32));
+			inventory.Add(new Slot(i, SCREENSCALE));
 		}
 
         itemDB = GameObject.FindGameObjectWithTag("ItemDB").GetComponent<ItemDB>();
@@ -75,8 +74,9 @@ public class InventoryManager : MonoBehaviour {
 
 			// ボックスと個数
 			string slotCountString = "";
+			print("inventory["+i+"]"+inventory[i].itemCount);
 			if (inventory[i].itemCount > 1) slotCountString = inventory[i].itemCount.ToString ();
-			GUI.Box (inventory[i].slotRect, slotCountString, skin.GetStyle ("slot")); 
+			GUI.Box (inventory[i].slotRect, slotCountString, skin.GetStyle ("slot"));
 
 			// アイテムアイコン
 			if (inventory[i].item.itemName != null && i != movingInventoryIndex) GUI.DrawTexture (inventory[i].slotRect, inventory[i].item.itemIcon);
@@ -135,10 +135,10 @@ public class InventoryManager : MonoBehaviour {
 				}//入れ替え時
 				
 				else if (inputBeganInventoryIndex != -1 && inputEndInventoryIndex != -1) {
-					switchItemByInventoryIndex (inputBeganInventoryIndex, inputEndInventoryIndex);
+					swapItem (inputBeganInventoryIndex, inputEndInventoryIndex);
 				}//スワイプで捨てるとき 
-				else if (inputBeganInventoryIndex != -1 && inputEndPos.y < Screen.height / 1.5){
-					removeItemByInventoryIndex(inputBeganInventoryIndex);
+				else if (inputBeganInventoryIndex != -1 && inputEndPos.y < Screen.height / 1.8){
+					removeItem(inputBeganInventoryIndex);
 				}
 
 				// FIXME ↓ beganindexがなんかおかしいのに動いてる
@@ -179,33 +179,37 @@ public class InventoryManager : MonoBehaviour {
 		}else if(inventory[tappedInventoryIndex].item is OneTouchItem) {
 			// ワンタッチアイテムを使用し、正常に消費されたら選択解除
 			if (((OneTouchItem)inventory[tappedInventoryIndex].item).Effect()) {
-				consumeItemByItemId(inventory[tappedInventoryIndex].item.itemID);
+				consumeItem(tappedInventoryIndex);
 				selectedInventoryIndex = -1;
 			}
 		}
 	}
 
 	//スロットのスワップ
-	void switchItemByInventoryIndex(int from, int to){
+	// HACK Slotをスワップするとなぜか動かないのでアイテムと個数をばらばらにスワップ
+	void swapItem(int from, int to){
 		Item tmp = inventory[from].item;
+		int tmpCount = inventory [from].itemCount;
+
 		inventory[from].item = inventory[to].item;
+		inventory[from].itemCount = inventory[to].itemCount;
 		inventory[to].item = tmp;
+		inventory[to].itemCount = tmpCount;
+
 		selectedInventoryIndex = -1;
 	}
 
 	//アイテム消費 個数を1へらす 残り1個のときは空にする
-	void consumeItemByItemId(int id){
-		for (int i=0; i<inventory.Count; i++) {
-			if (inventory[i].item.itemID == id){
-				if(inventory[i].itemCount > 1) inventory[i].itemCount--;
-				else inventory[i].item = new EmptyItem();
-			}
-		}
+	void consumeItem(int inventoryIndex){
+		if (inventory [inventoryIndex].itemCount > 1)
+			inventory [inventoryIndex].itemCount--;
+		else
+			inventory [inventoryIndex] = new Slot(inventoryIndex, SCREENSCALE);
 	}
 
 	//アイテムをスワイプして捨てる
-	void removeItemByInventoryIndex(int inventoryIndex){
-		inventory[inventoryIndex].item = new EmptyItem();
+	void removeItem(int inventoryIndex){
+		inventory[inventoryIndex] = new Slot(inventoryIndex, SCREENSCALE);
 		selectedInventoryIndex = -1;
 	}
 
