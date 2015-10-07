@@ -288,7 +288,7 @@ Transform:
   - {fileID: 689669167}
   - {fileID: 2015547773}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
 --- !u!61 &508775681
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -329,7 +329,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0ee4bb86cf219a489c47eadf2688cba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-
   hpMax: 15
   spMax: 100
   speed: .100000001
@@ -381,7 +380,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ad9a0b868dfa5944abf5b0deaf58622e, type: 2}
   m_IsPrefabParent: 0
-
 --- !u!1 &611314054
 GameObject:
   m_ObjectHideFlags: 0

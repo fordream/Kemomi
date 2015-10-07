@@ -9,9 +9,9 @@ public class InventoryManager : MonoBehaviour {
 	public List<Item> items = new List<Item>(); //全アイテムのリスト
 	public int selectedInventoryIndex;
 	public int movingInventoryIndex;
-	public int movingFingerId;
+	public int inputFingerId;
 	public bool isShowingInventory; //trueのときインベントリを表示
-	
+	public Rect inventoryRect;
 
 	private Vector2 inputBeganPos;
 	private int inputBeganInventoryIndex;
@@ -44,11 +44,16 @@ public class InventoryManager : MonoBehaviour {
 		for (int i=0; i<inventorySize; i++){
 			inventory.Add(new Slot(i, SCREENSCALE));
 		}
-	
+		inventoryRect = new Rect (inventory [inventorySize - 1].slotRect.xMin,
+		                         inventory [inventorySize - 1].slotRect.yMin, 
+		                         inventory [0].slotRect.xMax - inventory [inventorySize - 1].slotRect.xMin,
+		                         inventory [0].slotRect.yMax - inventory [inventorySize - 1].slotRect.yMin);
+
+
 
 		selectedInventoryIndex = -1;
 		movingInventoryIndex = -1;
-		movingFingerId = -1;
+		inputFingerId = -1;
 		inputBeganInventoryIndex = -1;
 		inputPrevInventoryIndex = -1;
 		inputEndInventoryIndex = -1;
@@ -67,16 +72,17 @@ public class InventoryManager : MonoBehaviour {
 	}
 
 	void Update () {
-//		print("inventory[0]=" + inventory[0].itemName);
-//		print("inventory[1]=" + inventory[1].itemName);
-//		print("inventory[2]=" + inventory[2].itemName);
-//		print("inventory[3]=" + inventory[3].itemName);
-//		print("inventory[4]=" + inventory[4].itemName);
+		// print("inventory[0]=" + inventory[0].itemName);
+		// print("inventory[1]=" + inventory[1].itemName);
+		// print("inventory[2]=" + inventory[2].itemName);
+		// print("inventory[3]=" + inventory[3].itemName);
+		// print("inventory[4]=" + inventory[4].itemName);
 	}
 
 	//GUIイベントが発生するたびに呼ばれる
 	void OnGUI(){
 		GUI.skin = skin;
+
 
 		if (isShowingInventory){
 			Touch[] touches = Input.touches;
@@ -91,7 +97,7 @@ public class InventoryManager : MonoBehaviour {
 
 			// ボックスと個数
 			string slotCountString = "";
-			print("inventory["+i+"]"+inventory[i].itemCount);
+			// print("inventory["+i+"]"+inventory[i].itemCount);
 			if (inventory[i].itemCount > 1) slotCountString = inventory[i].itemCount.ToString ();
 			GUI.Box (inventory[i].slotRect, slotCountString, skin.GetStyle ("slot"));
 
@@ -108,9 +114,9 @@ public class InventoryManager : MonoBehaviour {
 
 		foreach (var touch in Input.touches) { 
 			Vector2 touchPos = new Vector2 (touch.position.x, Screen.height - touch.position.y);
-//			print (touchPos);
-			// ドラッグ状態の時はその指1本しかトラックしない
-			if ( !(movingFingerId == -1 || movingFingerId == touch.fingerId) ) break;
+			// print (touchPos);
+			// タッチし始めた指1本しかトラックしない
+			if ( !(inputFingerId == -1 || inputFingerId == touch.fingerId) ) break;
 			switch (touch.phase) {
 			//タッチ開始時
 			case TouchPhase.Began:
@@ -120,7 +126,10 @@ public class InventoryManager : MonoBehaviour {
 					if (inventory[i].slotRect.Contains (inputBeganPos)) {
 						inputBeganInventoryIndex = i;
 						inputPrevInventoryIndex = i;
-//						print ("inventory["+i+"]began");
+						// print ("inventory["+i+"]began");
+
+						//タッチし始めた指を記録
+						inputFingerId = touch.fingerId;
 					}
 				}
 				break;
@@ -131,13 +140,11 @@ public class InventoryManager : MonoBehaviour {
 				for(int i=0; i<inventorySize; i++){
 					if (inventory[i].slotRect.Contains (inputPrevPos)) {
 						inputPrevInventoryIndex = i;
-//						print ("inventory["+i+"]moving");
+						// print ("inventory["+i+"]moving");
 					}
 				}
-
-				// 指をスロットからはみ出すように動かした場合はドラッグ状態に移行してそれ以外の指をブロック
+				// 指をスロットからはみ出すように動かした場合はドラッグ状態に移行
 				if (inputBeganInventoryIndex != -1 && !inventory[inputBeganInventoryIndex].slotRect.Contains(touchPos)){
-					movingFingerId = touch.fingerId;
 					movingInventoryIndex = inputBeganInventoryIndex;
 				}
 
@@ -150,7 +157,7 @@ public class InventoryManager : MonoBehaviour {
 					if (inventory[i].slotRect.Contains (inputEndPos)) {
 						inputPrevInventoryIndex = i;
 						inputEndInventoryIndex = i;
-//						print ("inventory["+i+"]end");
+						// print ("inventory["+i+"]end");
 					}
 				}
 				
@@ -176,13 +183,13 @@ public class InventoryManager : MonoBehaviour {
 				inputPrevInventoryIndex = -1;
 				inputEndInventoryIndex = -1; 
 				movingInventoryIndex = -1;
-				movingFingerId = -1;
+				inputFingerId = -1;
 				
 				break;
 			}
 
 				// 入力が必要な描画なので仕方なくdrawInventoryでなくここに書いてる
-				if (movingFingerId != -1) GUI.DrawTexture(new Rect(touchPos.x - 32, touchPos.y - 32, SCREENSCALE*32, SCREENSCALE*32), inventory[inputBeganInventoryIndex].item.itemIcon);
+				if (movingInventoryIndex != -1) GUI.DrawTexture(new Rect(touchPos.x - 32, touchPos.y - 32, SCREENSCALE*32, SCREENSCALE*32), inventory[movingInventoryIndex].item.itemIcon);
 			
 		}
 	}
